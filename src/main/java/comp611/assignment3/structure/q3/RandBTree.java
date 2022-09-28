@@ -1,18 +1,18 @@
-package comp611.assignment3.structure;
+package comp611.assignment3.structure.q3;
 
 public class RandBTree {
 
-    private class redBlackNode {
+    private class RBNode<E extends Comparable<E>> {
         public int key;
         public int value;
 
         public boolean isRed;
 
-        public redBlackNode left;
-        public redBlackNode right;
-        public redBlackNode parent;
+        public RBNode<E> left;
+        public RBNode<E> right;
+        public RBNode<E> parent;
 
-        public redBlackNode(int key, int value, boolean isRed, redBlackNode left, redBlackNode right, redBlackNode parent) {
+        public RBNode(int key, int value, boolean isRed, RBNode<E> left, RBNode<E> right, RBNode<E> parent) {
             this.key = key;
             this.value = value;
             this.isRed = isRed;

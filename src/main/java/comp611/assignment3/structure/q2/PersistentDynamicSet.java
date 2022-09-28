@@ -1,23 +1,16 @@
-package comp611.assignment3.structure;
+package comp611.assignment3.structure.q2;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
-@SuppressWarnings({"unused", "unchecked", "ManualArrayCopy"})
+@SuppressWarnings({"unused"})
 public class PersistentDynamicSet<E extends Comparable<E>> {
 
-    private Node<E>[] rootNodes;
-    private static int DEF_SIZE = 5;
+    private final Map<Integer,Node<E>> rootNodes;
 
     public PersistentDynamicSet() {
-        this.rootNodes = new Node[DEF_SIZE];
-    }
-
-    private void increaseSize() {
-        Node<E>[] newRootNodes = new Node[rootNodes.length * 2];
-        for (int i = 0; i < rootNodes.length; i++) {
-            newRootNodes[i] = rootNodes[i];
-        }
-        this.rootNodes = newRootNodes;
+        this.rootNodes = new HashMap<>();
     }
 
     private boolean add(E e) {
@@ -35,7 +28,7 @@ public class PersistentDynamicSet<E extends Comparable<E>> {
 
     private Node<E> findNode(E e) {
         // start at root
-        for(Node<E> root : rootNodes)  {
+        for(Node<E> root : rootNodes.values())  {
             Node<E> current = root;
             if(current.left == null && current.right == null) {
                 return null;
@@ -62,7 +55,7 @@ public class PersistentDynamicSet<E extends Comparable<E>> {
 
     @Override
     public String toString() {
-        return "PersistentDynamicSet{" + "rootNodes=" + Arrays.toString(rootNodes) + '}';
+        return "PersistentDynamicSet{" + "rootNodes=" + Arrays.toString(rootNodes.values().toArray()) + '}';
     }
 
     private static class Node<E extends Comparable<E>> {
