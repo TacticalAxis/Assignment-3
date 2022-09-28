@@ -1,5 +1,6 @@
 package comp611.assignment3.structure.q2;
 
+import comp611.assignment3.structure.Version;
 import comp611.assignment3.structure.q1.BinarySearchTree;
 
 import java.util.*;
@@ -7,34 +8,30 @@ import java.util.*;
 @SuppressWarnings({"unused"})
 public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchTree<E> {
 
-    private final Map<Integer,Node> rootNodes;
+    private final Map<Version,Node> thingymabob;
+    private Node currentRoot;
     private Node currentNode;
 
-//    private class HookActivation {
-//        private Node root;
-//
-//        private HookActivation(Node node) {
-//            this.root = new Node(node);
-//        }
-//
-////        private void add(Node node) {
-////            if(currentNode.left =)
-////        }
-//    }
-
     public PersistentDynamicSet() {
-        this.rootNodes = new HashMap<>();
+        this.thingymabob = new HashMap<>();
         this.currentNode = null;
+        this.currentRoot = null;
     }
 
     @Override
     public boolean add(E e) {
         // call the super, which calls the hook stuff
         // when hook called on the next node,
-        return super.add(e);
+        boolean ret = super.add(e);
+
+        currentNode = null;
+        currentRoot = null;
+
+        System.out.println("Versions: " + thingymabob.size());
+
+        return ret;
     }
 
-    //
 //    private boolean add(E e) {
 //        return findNode(e) == null;
 //        // here's the part where you search through the tree to find the right position
@@ -73,42 +70,27 @@ public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchT
 
     @Override
     public String toString() {
-        return "PersistentDynamicSet{" + "rootNodes=" + Arrays.toString(rootNodes.values().toArray()) + '}';
+        return "PersistentDynamicSet{" + "rootNodes=" + Arrays.toString(thingymabob.values().toArray()) + '}';
     }
 
     @Override
     public void hook(Node node) {
         // check if current node is null, if it is, set it to new Node(node), then return
+        if (currentNode == null) {
+            currentNode = new Node(node);
+            return;
+        }
 
         // given current node is not null, check if node is left or right child of current node
-
-        // if left child, currentNode.left = new Node(node), so same for right
+        if (currentNode.left == node) {
+            currentNode = new Node(currentNode, node, null);
+        } else {
+            currentNode = new Node(currentNode, null, node);
+        }
 
         // add to version thingymabob
+        thingymabob.put(new Version(), currentRoot);
 
-//        System.out.println("Located node: " + node.value);
+        System.out.println("Located node: " + node.value);
     }
-
-    //
-//    private static class Node<E extends Comparable<E>> {
-//        private final E value;
-//        private Node<E> left;
-//        private Node<E> right;
-//
-//        public Node(E value) {
-//            this.value = value;
-//        }
-//
-//        public Node<E> getLeft() {
-//            return left;
-//        }
-//
-//        public Node<E> getRight() {
-//            return right;
-//        }
-//
-//        public E getValue() {
-//            return value;
-//        }
-//    }
 }

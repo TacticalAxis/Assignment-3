@@ -29,7 +29,7 @@ public class TreeGUI extends JFrame implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         // open dialog box
-        JOptionPane.showMessageDialog(this, "KEANNA BULLY ME ☹ © she tol me to get good grades");
+        JOptionPane.showMessageDialog(this, "KEANNA BULLY ME 😀😀 she tol me to get good grades");
     }
 
     @Override
