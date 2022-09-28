@@ -11,12 +11,6 @@ public abstract class BinarySearchTree<E> {
         this.current = null;
     }
 
-    public BinarySearchTree(Collection<? extends E> c) {
-        this();
-        for (E element : c)
-            add(element);
-    }
-
     public static void main(String[] args) {  // create the binary search tree
         BinarySearchTree<String> tree = new BinarySearchTree<String>("Keanna") {
             @Override
@@ -57,27 +51,31 @@ public abstract class BinarySearchTree<E> {
         } else {
             Node<E> current = root;
             while(true) {
-                if(e.compareTo(current.element) < 0) {
-                    if(current.left == null) {
-                        current.left = new Node<>(e);
-                        break;
-                    } else {
-                        current = current.left;
-                    }
-                } else if(e.compareTo(current.element) > 0) {
-                    if(current.right == null) {
-                        current.right = new Node<>(e);
-                        break;
-                    } else {
-                        current = current.right;
-                    }
+
+
+
+//                if(e.compareTo(current.element) < 0) {
+//                    if(current.left == null) {
+//                        current.left = new Node<>(e);
+//                        break;
+//                    } else {
+//                        current = current.left;
+//                    }
+//                } else if(e.compareTo(current.element) > 0) {
+//                    if(current.right == null) {
+//                        current.right = new Node<>(e);
+//                        break;
+//                    } else {
+//                        current = current.right;
+//                    }
                 } else {
                     break;
                 }
             }
         }
 
-    }
+
+
 
     // remove
     public void remove(E e) {
@@ -97,6 +95,16 @@ public abstract class BinarySearchTree<E> {
     // toString
     public String toString() {
         return root.toString();
+    }
+
+    private int compare(E e1, E e2) {
+        if (comparator != null)
+            return comparator.compare(e1, e2);
+        else if (e1 != null && e1 instanceof Comparable)
+            return ((Comparable) e1).compareTo(e2); //unchecked
+        else if (e2 != null && e2 instanceof Comparable)
+            return -((Comparable) e2).compareTo(e1);//unchecked
+        else return 0;
     }
 
     private static class Node<E> {
