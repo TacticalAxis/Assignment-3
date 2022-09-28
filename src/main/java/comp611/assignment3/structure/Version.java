@@ -28,4 +28,8 @@ public class Version {
     public Version() {
         this.number = VersionIncrement.getInstance().getNumber();
     }
+
+    public int getNumber() {
+        return number;
+    }
 }

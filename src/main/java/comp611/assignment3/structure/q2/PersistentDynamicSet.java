@@ -78,6 +78,7 @@ public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchT
         // check if current node is null, if it is, set it to new Node(node), then return
         if (currentNode == null) {
             currentNode = new Node(node);
+            currentRoot = currentNode;
             return;
         }
 
@@ -91,6 +92,11 @@ public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchT
         // add to version thingymabob
         thingymabob.put(new Version(), currentRoot);
 
-        System.out.println("Located node: " + node.value);
+        System.out.println("thing node: " + thingymabob.size());
+//        System.out.println("Located node: " + node.value);
+    }
+
+    public void getAllVersion(){
+
     }
 }

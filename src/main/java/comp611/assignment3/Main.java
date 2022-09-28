@@ -55,12 +55,12 @@ public class Main {
         System.out.println("Original Tree: \n" + tree);
 
         // test remove
-        System.out.println("Removing owl:" + tree.remove("owl"));
-        System.out.println("Removing dog:" + tree.remove("dog"));
-
-        // test contains
-        System.out.println("Contains owl: " + tree.contains("owl"));
-        System.out.println("Contains owl: " + tree.contains("owl"));
+//        System.out.println("Removing owl:" + tree.remove("owl"));
+//        System.out.println("Removing dog:" + tree.remove("dog"));
+//
+//        // test contains
+//        System.out.println("Contains owl: " + tree.contains("owl"));
+//        System.out.println("Contains owl: " + tree.contains("owl"));
 
         // final tree
         System.out.println("Modified Tree: \n" + tree);
@@ -73,16 +73,16 @@ public class Main {
     public static void main(String[] args) {
 
         // run binary search tree
-        runBST();
+//        runBST();
 
         // run red black tree
-        runRBT();
+//        runRBT();
 
         // run persistent dynamic set
         runPDS();
 
         // run balanced persistent dynamic set
-        runBPDS();
+//        runBPDS();
 
         TreeGUI.main(args);
     }
