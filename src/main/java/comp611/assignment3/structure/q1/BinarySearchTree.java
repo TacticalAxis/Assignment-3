@@ -214,6 +214,16 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
             this.value = element;
         }
 
+        public Node(Node node, Node left, Node right) {
+            this.value = node.value;
+            if (left != null) {
+                this.left = null;
+            }
+            if (right != null) {
+                this.right = null;
+            }
+        }
+
         public Node(Node node) {
             this.value = node.value;
             this.left = node.left;

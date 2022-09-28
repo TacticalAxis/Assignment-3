@@ -8,23 +8,23 @@ import java.util.*;
 public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchTree<E> {
 
     private final Map<Integer,Node> rootNodes;
-//    private Node currentNode;
+    private Node currentNode;
 
-    private class HookActivation {
-        private Node root;
-
-        private HookActivation(Node node) {
-            this.root = new Node(node);
-        }
-
-//        private void add(Node node) {
-//            if(currentNode.left =)
+//    private class HookActivation {
+//        private Node root;
+//
+//        private HookActivation(Node node) {
+//            this.root = new Node(node);
 //        }
-    }
+//
+////        private void add(Node node) {
+////            if(currentNode.left =)
+////        }
+//    }
 
     public PersistentDynamicSet() {
         this.rootNodes = new HashMap<>();
-//        this.currentNode = null;
+        this.currentNode = null;
     }
 
     @Override
@@ -78,8 +78,15 @@ public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchT
 
     @Override
     public void hook(Node node) {
-        System.out.println("Located node: " + node.value);
-//        if(currentNode.left == )
+        // check if current node is null, if it is, set it to new Node(node), then return
+
+        // given current node is not null, check if node is left or right child of current node
+
+        // if left child, currentNode.left = new Node(node), so same for right
+
+        // add to version thingymabob
+
+//        System.out.println("Located node: " + node.value);
     }
 
     //
