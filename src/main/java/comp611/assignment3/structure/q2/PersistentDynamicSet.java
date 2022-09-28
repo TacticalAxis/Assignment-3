@@ -78,6 +78,7 @@ public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchT
 
     @Override
     public void hook(Node node) {
+        System.out.println("Located node: " + node.value);
 //        if(currentNode.left == )
     }
 
