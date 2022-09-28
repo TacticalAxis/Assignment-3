@@ -3,7 +3,7 @@ package comp611.assignment3.structure.q1;
 public abstract class BinarySearchTree<E extends Comparable<E>> {
 
     // root of the tree
-    private Node<E> root;
+    private Node root;
 
     // constructor
     public BinarySearchTree() {
@@ -14,7 +14,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
     public int size() {
         int size = 0;
         // iterate through the tree and count the number of nodes
-        Node<E> current = root;
+        Node current = root;
 
         // if current children are null
         if(current.left == null && current.right == null) {
@@ -34,7 +34,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
         return size;
     }
 
-    private int size(Node<E> node) {
+    private int size(Node node) {
         int size = 1;
 
         // add the size of the left child
@@ -53,12 +53,12 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
     public boolean add(E e) {
         // if the tree is empty
         if (root == null) {
-            root = new Node<>(e);
+            root = new Node(e);
             return true;
         }
 
         // iterate through the tree
-        Node<E> current = root;
+        Node current = root;
         hook(current);
 //        System.out.println(e + " reached " + current.value);
 
@@ -67,7 +67,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
             if(e.compareTo(current.value) < 0) {
                 if(current.left == null) {
                     // add the value to the left
-                    current.left = new Node<>(e);
+                    current.left = new Node(e);
                     break;
                 } else {
                     // move to the left child
@@ -76,7 +76,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
             } else if(e.compareTo(current.value) > 0) {
                 if (current.right == null) {
                     // add the value to the right
-                    current.right = new Node<>(e);
+                    current.right = new Node(e);
                     break;
                 } else {
                     // move to the right child
@@ -95,8 +95,8 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
 
     public boolean remove(E value) {
         // store ref to parent and current node
-        Node<E> parent = null;
-        Node<E> current = root;
+        Node parent = null;
+        Node current = root;
 
         hook(current);
 //        System.out.println(value + " reached " + current.value);
@@ -139,8 +139,8 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
             }
         } else {
             // if the current node has a left child
-            Node<E> rightMost = current.left;
-            Node<E> rightMostParent = current;
+            Node rightMost = current.left;
+            Node rightMostParent = current;
 
             hook(rightMost);
 //            System.out.println(value + " reached " + rightMost.value);
@@ -178,7 +178,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
     }
 
     public boolean contains(E value) {
-        Node<E> current = root;
+        Node current = root;
 
         // iterate through the tree
         while(current != null) {
@@ -200,18 +200,24 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
     }
 
     // hook method
-    public abstract void hook(Node<E> node);
+    public abstract void hook(Node node);
 
-    public static class Node<E extends Comparable<E>> implements Comparable<E>{
+    public class Node implements Comparable<E>{
         // every node has a value
         public E value;
 
         //every node has a left and right node
-        public Node<E> left;
-        public Node<E> right;
+        public Node left;
+        public Node right;
 
         public Node(E element) {
             this.value = element;
+        }
+
+        public Node(Node node) {
+            this.value = node.value;
+            this.left = node.left;
+            this.right = node.right;
         }
 
         @Override

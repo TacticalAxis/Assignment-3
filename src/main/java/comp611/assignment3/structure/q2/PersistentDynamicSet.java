@@ -2,17 +2,36 @@ package comp611.assignment3.structure.q2;
 
 import comp611.assignment3.structure.q1.BinarySearchTree;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @SuppressWarnings({"unused"})
 public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchTree<E> {
 
-    private final Map<Integer,Node<E>> rootNodes;
+    private final Map<Integer,Node> rootNodes;
+//    private Node currentNode;
+
+    private class HookActivation {
+        private Node root;
+
+        private HookActivation(Node node) {
+            this.root = new Node(node);
+        }
+
+//        private void add(Node node) {
+//            if(currentNode.left =)
+//        }
+    }
 
     public PersistentDynamicSet() {
         this.rootNodes = new HashMap<>();
+//        this.currentNode = null;
+    }
+
+    @Override
+    public boolean add(E e) {
+        // call the super, which calls the hook stuff
+        // when hook called on the next node,
+        return super.add(e);
     }
 
     //
@@ -29,28 +48,28 @@ public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchT
 //        // once find node where either left or right child is e, node.left or node.right = child
 //    }
 
-    private Node<E> findNode(E e) {
-        // start at root
-        for(Node<E> root : rootNodes.values())  {
-            Node<E> current = root;
-            if(current.left == null && current.right == null) {
-                return null;
-            }
-
-            // compare left and right or return current
-            while(current != null) {
-                if(current.value.compareTo(e) == 0) {
-                    return current;
-                } else if(current.value.compareTo(e) > 0) {
-                    current = current.left;
-                } else {
-                    current = current.right;
-                }
-            }
-        }
-
-        return null;
-    }
+//    private Node<E> findNode(E e) {
+//        // start at root
+//        for(Node<E> root : rootNodes.values())  {
+//            Node<E> current = root;
+//            if(current.left == null && current.right == null) {
+//                return null;
+//            }
+//
+//            // compare left and right or return current
+//            while(current != null) {
+//                if(current.value.compareTo(e) == 0) {
+//                    return current;
+//                } else if(current.value.compareTo(e) > 0) {
+//                    current = current.left;
+//                } else {
+//                    current = current.right;
+//                }
+//            }
+//        }
+//
+//        return null;
+//    }
 
     @Override
     public String toString() {
@@ -58,29 +77,30 @@ public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchT
     }
 
     @Override
-    public void hook(BinarySearchTree.Node<E> parent) {
-
+    public void hook(Node node) {
+//        if(currentNode.left == )
     }
 
-    private static class Node<E extends Comparable<E>> {
-        private final E value;
-        private Node<E> left;
-        private Node<E> right;
-
-        public Node(E value) {
-            this.value = value;
-        }
-
-        public Node<E> getLeft() {
-            return left;
-        }
-
-        public Node<E> getRight() {
-            return right;
-        }
-
-        public E getValue() {
-            return value;
-        }
-    }
+    //
+//    private static class Node<E extends Comparable<E>> {
+//        private final E value;
+//        private Node<E> left;
+//        private Node<E> right;
+//
+//        public Node(E value) {
+//            this.value = value;
+//        }
+//
+//        public Node<E> getLeft() {
+//            return left;
+//        }
+//
+//        public Node<E> getRight() {
+//            return right;
+//        }
+//
+//        public E getValue() {
+//            return value;
+//        }
+//    }
 }

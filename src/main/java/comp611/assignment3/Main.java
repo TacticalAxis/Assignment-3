@@ -8,7 +8,7 @@ public class Main {
     public static void runBST() {  // create the binary search tree
         System.out.println("Running BST");
         BinarySearchTree<String> tree = new BinarySearchTree<String>() {
-            @Override public void hook(Node<String> node) {/* not required for bst */}
+            @Override public void hook(Node node) {/* not required for bst */}
         };
 
         // build the tree
