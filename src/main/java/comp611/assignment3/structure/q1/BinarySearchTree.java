@@ -1,6 +1,5 @@
 package comp611.assignment3.structure.q1;
 
-@SuppressWarnings("UnusedReturnValue")
 public abstract class BinarySearchTree<E extends Comparable<E>> {
 
     // root of the tree
@@ -198,30 +197,6 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
     @Override
     public String toString() {
         return root.toFormattedString(0) + "\n";
-    }
-
-    public static void main(String[] args) {  // create the binary search tree
-        BinarySearchTree<String> tree = new BinarySearchTree<String>() {
-            @Override public void hook(Node<String> node) {/* not required for bst */}
-        };
-
-        // build the tree
-        tree.add("cow");
-        tree.add("fly");
-        tree.add("dog");
-        tree.add("bat");
-        tree.add("fox");
-        tree.add("cat");
-        tree.add("eel");
-        tree.add("ant");
-        tree.add("greg");
-        System.out.println("Original Tree: \n" + tree);
-        System.out.println("=======================================");
-        tree.remove("owl");
-        tree.remove("dog");
-        System.out.println("Contains owl: " + tree.contains("owl"));
-        System.out.println("Contains owl: " + tree.contains("owl"));
-        System.out.println("Modified Tree: \n" + tree);
     }
 
     // hook method

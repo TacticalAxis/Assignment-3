@@ -52,10 +52,6 @@ public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchT
         return null;
     }
 
-//    private boolean contains(E e) {
-//        return findNode(e) != null;
-//    }
-
     @Override
     public String toString() {
         return "PersistentDynamicSet{" + "rootNodes=" + Arrays.toString(rootNodes.values().toArray()) + '}';
@@ -65,11 +61,6 @@ public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchT
     public void hook(BinarySearchTree.Node<E> parent) {
 
     }
-
-//    @Override
-//    public void hook(BinarySearchTree.Node<E> node) {
-//
-//    }
 
     private static class Node<E extends Comparable<E>> {
         private final E value;
