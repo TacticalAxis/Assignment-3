@@ -6,3 +6,8 @@
 .idea/vcs.xml
 .idea/workspace.xml
 target/*
+.idea/uiDesigner.xml
+.idea/sonarlint/issuestore/4/4/442292b8a7efeabbe4cc176709b833b1792140ec
+*.pb
+.idea/discord.xml
+.idea/checkstyle-idea.xml
