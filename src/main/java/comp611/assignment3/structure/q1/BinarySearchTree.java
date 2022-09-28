@@ -148,6 +148,8 @@ public abstract class BinarySearchTree<E extends Comparable<E>> implements Searc
             }
         }
 
+//        hook();
+
         return true;
     }
 
@@ -176,10 +178,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> implements Searc
 
     public static void main(String[] args) {  // create the binary search tree
         BinarySearchTree<String> tree = new BinarySearchTree<String>() {
-            @Override
-            public void hook(Node<String> node) {
-                System.out.println(node);
-            }
+            @Override public void hook(Node<String> parent) {/* not required for bst */}
         };
 
         // build the tree
@@ -201,9 +200,9 @@ public abstract class BinarySearchTree<E extends Comparable<E>> implements Searc
     }
 
     // hook method
-    public abstract void hook(Node<E> node);
+    public abstract void hook(Node<E> parent);
 
-    private static class Node<E extends Comparable<E>> implements Comparable<E>{
+    public static class Node<E extends Comparable<E>> implements Comparable<E>{
         // every node has a value
         public E value;
 

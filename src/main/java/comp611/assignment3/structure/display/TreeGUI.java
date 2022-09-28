@@ -1,9 +1,11 @@
 package comp611.assignment3.structure.display;
 
 import javax.swing.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 // class that shows a picture of a tree
-public class TreeGUI extends JFrame {
+public class TreeGUI extends JFrame implements MouseListener {
     private static final long serialVersionUID = 1L;
 
     public TreeGUI() {
@@ -16,9 +18,37 @@ public class TreeGUI extends JFrame {
         add(label);
 
         setVisible(true);
+
+        addMouseListener(this);
     }
 
     public static void main(String[] args) {
         new TreeGUI();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // open dialog box
+        JOptionPane.showMessageDialog(this, "KEANNA BULLY ME ☹ © she tol me to get good grades");
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
     }
 }
