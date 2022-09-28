@@ -11,3 +11,6 @@ target/*
 *.pb
 .idea/discord.xml
 .idea/checkstyle-idea.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/*
+.idea/inspectionProfiles/Project_Default.xml

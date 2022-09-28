@@ -1,8 +1,7 @@
 package comp611.assignment3.structure.q1;
 
-import comp611.assignment3.structure.iface.SearchTree;
-
-public abstract class BinarySearchTree<E extends Comparable<E>> implements SearchTree<E> {
+@SuppressWarnings("UnusedReturnValue")
+public abstract class BinarySearchTree<E extends Comparable<E>> {
 
     // root of the tree
     private Node<E> root;
@@ -13,7 +12,6 @@ public abstract class BinarySearchTree<E extends Comparable<E>> implements Searc
     }
 
     // get size of the tree
-    @Override
     public int size() {
         int size = 0;
         // iterate through the tree and count the number of nodes
@@ -53,7 +51,6 @@ public abstract class BinarySearchTree<E extends Comparable<E>> implements Searc
         return size;
     }
 
-    @Override
     public boolean add(E e) {
         // if the tree is empty
         if (root == null) {
@@ -63,6 +60,9 @@ public abstract class BinarySearchTree<E extends Comparable<E>> implements Searc
 
         // iterate through the tree
         Node<E> current = root;
+        hook(current);
+//        System.out.println(e + " reached " + current.value);
+
         while(true) {
             // check if the value is less than the current node
             if(e.compareTo(current.value) < 0) {
@@ -83,17 +83,24 @@ public abstract class BinarySearchTree<E extends Comparable<E>> implements Searc
                     // move to the right child
                     current = current.right;
                 }
+            } else {
+                return false;
             }
+
+            hook(current);
+//            System.out.println(e + " reached " + current.value);
         }
 
         return true;
     }
 
-    @Override
     public boolean remove(E value) {
         // store ref to parent and current node
         Node<E> parent = null;
         Node<E> current = root;
+
+        hook(current);
+//        System.out.println(value + " reached " + current.value);
 
         // iterate through the tree
         while(current != null) {
@@ -106,6 +113,11 @@ public abstract class BinarySearchTree<E extends Comparable<E>> implements Searc
                 current = current.right;
             } else {
                 break;
+            }
+
+            if(current != null) {
+                hook(current);
+//                System.out.println(value + " reached " + current.value);
             }
         }
 
@@ -131,10 +143,16 @@ public abstract class BinarySearchTree<E extends Comparable<E>> implements Searc
             Node<E> rightMost = current.left;
             Node<E> rightMostParent = current;
 
+            hook(rightMost);
+//            System.out.println(value + " reached " + rightMost.value);
+
             // iterate through the right most node
             while(rightMost.right != null) {
                 rightMostParent = rightMost;
                 rightMost = rightMost.right;
+
+                hook(rightMost);
+//                System.out.println(value + " reached " + rightMost.value);
             }
 
             // replace the current node with the right most node
@@ -143,17 +161,23 @@ public abstract class BinarySearchTree<E extends Comparable<E>> implements Searc
             // if the right most node has a left child
             if(rightMostParent.right == rightMost) {
                 rightMostParent.right = rightMost.left;
+
+                hook(rightMostParent);
+//                System.out.println(value + " reached " + rightMostParent.value);
             } else {
                 rightMostParent.left = rightMost.left;
-            }
-        }
 
-//        hook();
+                hook(rightMostParent);
+//                System.out.println(value + " reached " + rightMostParent.value);
+            }
+
+            hook(current);
+//            System.out.println(value + " reached " + current.value);
+        }
 
         return true;
     }
 
-    @Override
     public boolean contains(E value) {
         Node<E> current = root;
 
@@ -173,12 +197,12 @@ public abstract class BinarySearchTree<E extends Comparable<E>> implements Searc
 
     @Override
     public String toString() {
-        return "[" + root.toString() + "]";
+        return root.toFormattedString(0) + "\n";
     }
 
     public static void main(String[] args) {  // create the binary search tree
         BinarySearchTree<String> tree = new BinarySearchTree<String>() {
-            @Override public void hook(Node<String> parent) {/* not required for bst */}
+            @Override public void hook(Node<String> node) {/* not required for bst */}
         };
 
         // build the tree
@@ -190,17 +214,18 @@ public abstract class BinarySearchTree<E extends Comparable<E>> implements Searc
         tree.add("cat");
         tree.add("eel");
         tree.add("ant");
-        System.out.println("Original Tree: " + tree);
+        tree.add("greg");
+        System.out.println("Original Tree: \n" + tree);
+        System.out.println("=======================================");
         tree.remove("owl");
-        tree.remove("cow");
+        tree.remove("dog");
         System.out.println("Contains owl: " + tree.contains("owl"));
-        tree.add("owl");
         System.out.println("Contains owl: " + tree.contains("owl"));
-        System.out.println("Modified Tree: " + tree);
+        System.out.println("Modified Tree: \n" + tree);
     }
 
     // hook method
-    public abstract void hook(Node<E> parent);
+    public abstract void hook(Node<E> node);
 
     public static class Node<E extends Comparable<E>> implements Comparable<E>{
         // every node has a value
@@ -219,9 +244,28 @@ public abstract class BinarySearchTree<E extends Comparable<E>> implements Searc
             return value.compareTo(o);
         }
 
+        public String toFormattedString(int gap) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(value).append("\n");
+            if(left != null) {
+                for(int i = 0; i < gap + 1; i++) {
+                    sb.append("\t");
+                }
+                sb.append(left.toFormattedString(gap + 1));
+            }
+            if(right != null) {
+                for(int i = 0; i < gap + 1; i++) {
+                    sb.append("\t");
+                }
+                sb.append(right.toFormattedString(gap + 1));
+            }
+            return sb.toString();
+        }
+
         @Override
         public String toString() {
-            return "" + (left != null ? "[" + left + "]" : "") + value + (right != null ? "[" + right + "]" : "") + "";
+            // return "" + (left != null ? "[" + left + "(" + getDepth() + ")]" : "") + value + (right != null ? "[" + right + "]" : "") + "";
+            return value.toString();
         }
     }
 }

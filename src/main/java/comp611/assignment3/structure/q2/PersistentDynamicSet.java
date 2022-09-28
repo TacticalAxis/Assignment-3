@@ -14,7 +14,8 @@ public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchT
     public PersistentDynamicSet() {
         this.rootNodes = new HashMap<>();
     }
-//
+
+    //
 //    private boolean add(E e) {
 //        return findNode(e) == null;
 //        // here's the part where you search through the tree to find the right position
