@@ -24,10 +24,43 @@ public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchT
         // when hook called on the next node,
         boolean ret = super.add(e);
 
-        currentNode = null;
-        currentRoot = null;
 
-        System.out.println("Versions: " + thingymabob.size());
+
+//        if (currentNode == null) {
+//            currentNode = new Node(node);
+//            currentRoot = currentNode;
+//            return;
+//        }
+//
+//        System.out.println("ew");
+//
+//        // given current node is not null, check if node is left or right child of current node
+//        if (currentNode.left == node) {
+//            System.out.println("is left");
+//            currentNode = new Node(currentNode, node, null);
+//        } else {
+//            System.out.println("-is right");
+//            currentNode = new Node(currentNode, null, node);
+//        }
+
+
+
+//        thingymabob.put(new Version(), currentRoot);
+
+//        currentNode = null;
+//        currentRoot = null;
+//        currentRoot = null;
+
+//        System.out.println("Versions: " + thingymabob.size());
+
+        Node tree = null;
+        for(Node node : thingymabob.values()) {
+            tree = node;
+        }
+
+        System.out.println("tree: " + tree);
+        System.out.println();
+//        System.out.println("thing node: " + thingymabob.size());
 
         return ret;
     }
@@ -75,24 +108,29 @@ public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchT
 
     @Override
     public void hook(Node node) {
+        System.out.println("hooked: " + node.value);
         // check if current node is null, if it is, set it to new Node(node), then return
-        if (currentNode == null) {
-            currentNode = new Node(node);
-            currentRoot = currentNode;
-            return;
-        }
-
-        // given current node is not null, check if node is left or right child of current node
-        if (currentNode.left == node) {
-            currentNode = new Node(currentNode, node, null);
-        } else {
-            currentNode = new Node(currentNode, null, node);
-        }
+//        if (currentNode == null) {
+//            currentNode = new Node(node);
+//            currentRoot = currentNode;
+//            return;
+//        }
+//
+//        System.out.println("ew");
+//
+//        // given current node is not null, check if node is left or right child of current node
+//        if (currentNode.left == node) {
+//            System.out.println("is left");
+//            currentNode = new Node(currentNode, node, null);
+//        } else {
+//            System.out.println("-is right");
+//            currentNode = new Node(currentNode, null, node);
+//        }
 
         // add to version thingymabob
-        thingymabob.put(new Version(), currentRoot);
+//        thingymabob.put(new Version(), currentRoot);
 
-        System.out.println("thing node: " + thingymabob.size());
+
 //        System.out.println("Located node: " + node.value);
     }
 

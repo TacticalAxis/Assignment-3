@@ -44,7 +44,7 @@ public class Main {
         PersistentDynamicSet<String> tree = new PersistentDynamicSet<>();
 
         // build the tree
-        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant"};
+        String[] toAddV1 = {"cow", "fly"};// "dog", "bat", "fox", "cat", "eel", "ant"};
         //  String[] toAddV2 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "greg", "owl", "pig", "rat", "sheep", "tiger", "wolf", "zebra"};
 
         for(String s : toAddV1) {
@@ -84,6 +84,6 @@ public class Main {
         // run balanced persistent dynamic set
 //        runBPDS();
 
-        TreeGUI.main(args);
+//        TreeGUI.main(args);
     }
 }
