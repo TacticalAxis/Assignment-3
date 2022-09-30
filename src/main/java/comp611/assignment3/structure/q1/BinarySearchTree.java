@@ -5,13 +5,13 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
     // root of the tree
     private Node root;
 
-    public Node getRoot() {
-        return this.root;
-    }
-
-    public void setRoot(Node root) {
-        this.root = root;
-    }
+//    public Node getRoot() {
+//        return this.root;
+//    }
+//
+//    public void setRoot(Node root) {
+//        this.root = root;
+//    }
 
     // constructor
     public BinarySearchTree() {
