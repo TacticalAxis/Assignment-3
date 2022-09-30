@@ -1,7 +1,5 @@
 package comp611.assignment3.structure;
 
-import java.util.Objects;
-
 public class Version {
 
     private static class VersionIncrement {
@@ -49,6 +47,6 @@ public class Version {
 
     @Override
     public int hashCode() {
-        return Objects.hash(number);
+        return number;
     }
 }

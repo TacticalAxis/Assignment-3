@@ -5,6 +5,14 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
     // root of the tree
     private Node root;
 
+    public Node getRoot() {
+        return this.root;
+    }
+
+    public void setRoot(Node root) {
+        this.root = root;
+    }
+
     // constructor
     public BinarySearchTree() {
         this.root = null;
@@ -214,15 +222,15 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
             this.value = element;
         }
 
-        public Node(Node node, Node left, Node right) {
-            this.value = node.value;
-            if (left != null) {
-                this.left = null;
-            }
-            if (right != null) {
-                this.right = null;
-            }
-        }
+//        public Node(Node node, Node left, Node right) {
+//            this.value = node.value;
+//            if (left != null) {
+//                this.left = null;
+//            }
+//            if (right != null) {
+//                this.right = null;
+//            }
+//        }
 
         public Node(Node node) {
             this.value = node.value;
@@ -237,7 +245,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
 
         public String toFormattedString(int gap) {
             StringBuilder sb = new StringBuilder();
-            sb.append(value).append("\n");
+            sb.append(value).append(this.hashCode()).append("\n");
             if(left != null) {
                 for(int i = 0; i < gap + 1; i++) {
                     sb.append("\t");

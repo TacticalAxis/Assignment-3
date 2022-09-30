@@ -1,8 +1,10 @@
 package comp611.assignment3;
 
-import comp611.assignment3.structure.display.TreeGUI;
+import comp611.assignment3.structure.Version;
 import comp611.assignment3.structure.q1.BinarySearchTree;
 import comp611.assignment3.structure.q2.PersistentDynamicSet;
+
+import java.util.Map;
 
 public class Main {
 
@@ -44,15 +46,27 @@ public class Main {
         PersistentDynamicSet<String> tree = new PersistentDynamicSet<>();
 
         // build the tree
-        String[] toAddV1 = {"cow", "fly"};// "dog", "bat", "fox", "cat", "eel", "ant"};
+        String[] toAddV1 = {"cow", "fly", "dog"};//, "fly", "dog", "bat", "fox", "cat", "eel", "ant"};
         //  String[] toAddV2 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "greg", "owl", "pig", "rat", "sheep", "tiger", "wolf", "zebra"};
 
         for(String s : toAddV1) {
-            System.out.println("Adding " + s + ": " + tree.add(s));
+//            System.out.println("Adding " + s + ": " + tree.add(s));
+            tree.add(s);
         }
 
         // display tree
-        System.out.println("Original Tree: \n" + tree);
+//        System.out.println("Tree: \n" + tree + "--");
+
+        Map<Version, BinarySearchTree<String>.Node> versions = tree.getAllVersions();
+
+        System.out.println("Versions Found: " + versions.size());
+
+        // display all versions
+        for(Map.Entry<Version, BinarySearchTree<String>.Node> entry : versions.entrySet()) {
+            System.out.println("Version: " + entry.getKey().getNumber());
+            System.out.println(entry.getValue().toFormattedString(0));
+            System.out.println("================");
+        }
 
         // test remove
 //        System.out.println("Removing owl:" + tree.remove("owl"));
@@ -63,7 +77,7 @@ public class Main {
 //        System.out.println("Contains owl: " + tree.contains("owl"));
 
         // final tree
-        System.out.println("Modified Tree: \n" + tree);
+//        System.out.println("Modified Tree: \n" + tree);
     }
 
     public static void runBPDS() {
