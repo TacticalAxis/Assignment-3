@@ -137,4 +137,8 @@ public class Node<E extends Comparable<E>> implements Comparable<E> {
         // return "" + (left != null ? "[" + left + "(" + getDepth() + ")]" : "") + value + (right != null ? "[" + right + "]" : "") + "";
         return value.toString();
     }
+
+    public Node<E> copy() {
+        return new Node(this.value, this.left, this.right, this.color);
+    }
 }

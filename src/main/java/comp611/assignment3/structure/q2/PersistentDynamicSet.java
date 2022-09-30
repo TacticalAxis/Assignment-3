@@ -1,8 +1,58 @@
 package comp611.assignment3.structure.q2;
 
-@SuppressWarnings({"unused"})
-public class PersistentDynamicSet {
+import comp611.assignment3.structure.Version;
+import comp611.assignment3.structure.q1.BinarySearchTree;
+import comp611.assignment3.structure.q1.Node;
 
+import java.util.*;
+
+@SuppressWarnings({"unused"})
+public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearchTree<E> {
+
+    private final Map<Version, Node<E>> rootMap;
+    private final Stack<Node<E>> nodeStack;
+
+    public PersistentDynamicSet() {
+        // call super
+        super();
+
+        this.rootMap = new HashMap<>();
+        rootMap.put(new Version(), getRoot());
+
+        this.nodeStack = new Stack<>();
+    }
+
+    @Override
+    public boolean add(E e) {
+
+
+        return super.add(e);
+    }
+
+    @Override
+    public boolean remove(E value) {
+        return super.remove(value);
+    }
+
+    @Override
+    public boolean contains(E value) {
+        return super.contains(value);
+    }
+
+    @Override
+    public void hookAdd(Node<E> node) {
+
+    }
+
+    @Override
+    public void hookRemove() {
+
+    }
+
+    @Override
+    public void hookNodeTrigger(Node<E> current) {
+
+    }
 }
 //
 //}<E extends Comparable<E>> extends BinarySearchTree<E> {

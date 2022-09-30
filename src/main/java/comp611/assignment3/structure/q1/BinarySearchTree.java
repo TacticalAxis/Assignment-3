@@ -208,11 +208,13 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
     }
 
     // hook method
-    public abstract void hookNodeTrigger(Node<E> node);
+    public abstract void hookNodeTrigger(Node<E> current);
 
     // add hook
     public abstract void hookAdd(Node<E> node);
 
     // remove hook
     public abstract void hookRemove();
+
+
 }

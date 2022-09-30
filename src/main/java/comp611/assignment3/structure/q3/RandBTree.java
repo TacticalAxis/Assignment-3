@@ -1,6 +1,53 @@
 package comp611.assignment3.structure.q3;
 
-public class RandBTree {
+import comp611.assignment3.structure.q1.BinarySearchTree;
+import comp611.assignment3.structure.q1.Node;
+
+public class RandBTree <E extends Comparable<E>> extends BinarySearchTree<E>{
+
+    @Override
+    public boolean add(E e) {
+        // if root is not null, create root with colour black, and value e, null left and right nodes
+//        if (root != null) {
+//            root = new Node<>(e);
+//            root.colour = Node.Colour.BLACK;
+//            root.left = null;
+//            root.right = null;
+//        }
+        // add code
+
+        // after add: check if its a leaf, if it is, set colour to black
+
+
+
+
+        return super.add(e);
+    }
+
+    @Override
+    public boolean remove(E value) {
+        return super.remove(value);
+    }
+
+    @Override
+    public boolean contains(E value) {
+        return super.contains(value);
+    }
+
+    @Override
+    public void hookNodeTrigger(Node<E> node) {
+
+    }
+
+    @Override
+    public void hookAdd(Node<E> node) {
+
+    }
+
+    @Override
+    public void hookRemove() {
+
+    }
 
 }
 //<E extends Comparable<E>> extends BinarySearchTree<E> {
