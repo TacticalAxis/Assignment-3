@@ -3,15 +3,15 @@ package comp611.assignment3.structure.q1;
 public abstract class BinarySearchTree<E extends Comparable<E>> {
 
     // root of the tree
-    private Node root;
+    private Node<E> root;
 
-//    public Node getRoot() {
-//        return this.root;
-//    }
-//
-//    public void setRoot(Node root) {
-//        this.root = root;
-//    }
+    public Node<E> getRoot() {
+        return this.root;
+    }
+
+    public void setRoot(Node<E> root) {
+        this.root = root;
+    }
 
     // constructor
     public BinarySearchTree() {
@@ -22,7 +22,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
     public int size() {
         int size = 0;
         // iterate through the tree and count the number of nodes
-        Node current = root;
+        Node<E> current = root;
 
         // if current children are null
         if(current.left == null && current.right == null) {
@@ -42,7 +42,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
         return size;
     }
 
-    private int size(Node node) {
+    private int size(Node<E> node) {
         int size = 1;
 
         // add the size of the left child
@@ -66,8 +66,8 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
         }
 
         // iterate through the tree
-        Node current = root;
-        hook(current);
+        Node<E> current = root;
+        hookNodeTrigger(current);
 //        System.out.println(e + " reached " + current.value);
 
         while(true) {
@@ -75,7 +75,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
             if(e.compareTo(current.value) < 0) {
                 if(current.left == null) {
                     // add the value to the left
-                    current.left = new Node(e);
+                    current.left = new Node<>(e);
                     break;
                 } else {
                     // move to the left child
@@ -84,7 +84,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
             } else if(e.compareTo(current.value) > 0) {
                 if (current.right == null) {
                     // add the value to the right
-                    current.right = new Node(e);
+                    current.right = new Node<>(e);
                     break;
                 } else {
                     // move to the right child
@@ -94,7 +94,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
                 return false;
             }
 
-            hook(current);
+            hookNodeTrigger(current);
 //            System.out.println(e + " reached " + current.value);
         }
 
@@ -103,10 +103,10 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
 
     public boolean remove(E value) {
         // store ref to parent and current node
-        Node parent = null;
-        Node current = root;
+        Node<E> parent = null;
+        Node<E> current = root;
 
-        hook(current);
+        hookNodeTrigger(current);
 //        System.out.println(value + " reached " + current.value);
 
         // iterate through the tree
@@ -123,7 +123,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
             }
 
             if(current != null) {
-                hook(current);
+                hookNodeTrigger(current);
 //                System.out.println(value + " reached " + current.value);
             }
         }
@@ -147,10 +147,10 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
             }
         } else {
             // if the current node has a left child
-            Node rightMost = current.left;
-            Node rightMostParent = current;
+            Node<E> rightMost = current.left;
+            Node<E> rightMostParent = current;
 
-            hook(rightMost);
+            hookNodeTrigger(rightMost);
 //            System.out.println(value + " reached " + rightMost.value);
 
             // iterate through the right most node
@@ -158,7 +158,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
                 rightMostParent = rightMost;
                 rightMost = rightMost.right;
 
-                hook(rightMost);
+                hookNodeTrigger(rightMost);
 //                System.out.println(value + " reached " + rightMost.value);
             }
 
@@ -169,16 +169,16 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
             if(rightMostParent.right == rightMost) {
                 rightMostParent.right = rightMost.left;
 
-                hook(rightMostParent);
+                hookNodeTrigger(rightMostParent);
 //                System.out.println(value + " reached " + rightMostParent.value);
             } else {
                 rightMostParent.left = rightMost.left;
 
-                hook(rightMostParent);
+                hookNodeTrigger(rightMostParent);
 //                System.out.println(value + " reached " + rightMostParent.value);
             }
 
-            hook(current);
+            hookNodeTrigger(current);
 //            System.out.println(value + " reached " + current.value);
         }
 
@@ -186,7 +186,7 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
     }
 
     public boolean contains(E value) {
-        Node current = root;
+        Node<E> current = root;
 
         // iterate through the tree
         while(current != null) {
@@ -208,63 +208,11 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
     }
 
     // hook method
-    public abstract void hook(Node node);
+    public abstract void hookNodeTrigger(Node<E> node);
 
-    public class Node implements Comparable<E>{
-        // every node has a value
-        public E value;
+    // add hook
+    public abstract void hookAdd(Node<E> node);
 
-        //every node has a left and right node
-        public Node left;
-        public Node right;
-
-        public Node(E element) {
-            this.value = element;
-        }
-
-//        public Node(Node node, Node left, Node right) {
-//            this.value = node.value;
-//            if (left != null) {
-//                this.left = null;
-//            }
-//            if (right != null) {
-//                this.right = null;
-//            }
-//        }
-
-        public Node(Node node) {
-            this.value = node.value;
-            this.left = node.left;
-            this.right = node.right;
-        }
-
-        @Override
-        public int compareTo(E o) {
-            return value.compareTo(o);
-        }
-
-        public String toFormattedString(int gap) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(value).append(this.hashCode()).append("\n");
-            if(left != null) {
-                for(int i = 0; i < gap + 1; i++) {
-                    sb.append("\t");
-                }
-                sb.append(left.toFormattedString(gap + 1));
-            }
-            if(right != null) {
-                for(int i = 0; i < gap + 1; i++) {
-                    sb.append("\t");
-                }
-                sb.append(right.toFormattedString(gap + 1));
-            }
-            return sb.toString();
-        }
-
-        @Override
-        public String toString() {
-            // return "" + (left != null ? "[" + left + "(" + getDepth() + ")]" : "") + value + (right != null ? "[" + right + "]" : "") + "";
-            return value.toString();
-        }
-    }
+    // remove hook
+    public abstract void hookRemove();
 }

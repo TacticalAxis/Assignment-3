@@ -1,21 +1,52 @@
 package comp611.assignment3.structure.q1;
 
-public abstract class BaseNode<E extends Comparable<E>> implements Comparable<E> {
+@SuppressWarnings("DuplicatedCode")
+public class Node<E extends Comparable<E>> implements Comparable<E> {
+
+    public enum TreeColor {RED, BLACK}
 
     // data stored in the node
-    protected E value;
+    public E value;
 
     // left child of the node
-    protected BaseNode<E> left;
+    public Node<E> left;
 
     // right child of the node
-    protected BaseNode<E> right;
+    public Node<E> right;
 
-    // constructor
-    public BaseNode(E value) {
+    // colour
+    public TreeColor color;
+
+    // binary tree node constructor
+    public Node(E value) {
         this.value = value;
         this.left = null;
         this.right = null;
+        this.color = null;
+    }
+
+    // binary tree node constructor with L/R
+    public Node(E value, Node<E> left, Node<E> right) {
+        this.value = value;
+        this.left = left;
+        this.right = right;
+        this.color = null;
+    }
+
+    // rb tree node constructor
+    public Node(E value, TreeColor color) {
+        this.value = value;
+        this.left = null;
+        this.right = null;
+        this.color = color;
+    }
+
+    // rb tree node constructor with L/R
+    public Node(E value, Node<E> left, Node<E> right, TreeColor color) {
+        this.value = value;
+        this.left = left;
+        this.right = right;
+        this.color = color;
     }
 
     // get data stored in the node
@@ -29,23 +60,31 @@ public abstract class BaseNode<E extends Comparable<E>> implements Comparable<E>
     }
 
     // get left child of the node
-    public BaseNode<E> getLeft() {
+    public Node<E> getLeft() {
         return this.left;
     }
 
     // set left child of the node
-    public void setLeft(BaseNode<E> left) {
+    public void setLeft(Node<E> left) {
         this.left = left;
     }
 
     // get right child of the node
-    public BaseNode<E> getRight() {
+    public Node<E> getRight() {
         return this.right;
     }
 
     // set right child of the node
-    public void setRight(BaseNode<E> right) {
+    public void setRight(Node<E> right) {
         this.right = right;
+    }
+
+    public TreeColor getColor() {
+        return color;
+    }
+
+    public void setColor(TreeColor color) {
+        this.color = color;
     }
 
     // get the height of the node
