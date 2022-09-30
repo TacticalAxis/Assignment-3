@@ -61,25 +61,25 @@ public class PersistentDynamicSet<E extends Comparable<E>> extends BinarySearchT
     public boolean add(E e) {
         System.out.println("Adding: " + e);
 
-        if(getRoot() != null) {
-            // duplicate root
-            this.currentRoot = new Node(getRoot());
-
-            // set root to new root
-            System.out.println("Old Root: " + getRoot() + getRoot().hashCode());
-            setRoot(this.currentRoot);
-            System.out.println("New Root: " + getRoot() + getRoot().hashCode());
-        } else {
-            this.currentRoot = getRoot();
-        }
+//        if(getRoot() != null) {
+//            // duplicate root
+//            this.currentRoot = new Node(getRoot());
+//
+//            // set root to new root
+//            System.out.println("Old Root: " + getRoot() + getRoot().hashCode());
+//            setRoot(this.currentRoot);
+//            System.out.println("New Root: " + getRoot() + getRoot().hashCode());
+//        } else {
+//            this.currentRoot = getRoot();
+//        }
 
         this.currentNode = currentRoot;
 
         boolean ret = super.add(e);
 
         Version version = new Version();
-        System.out.println("Adding " + e + " in version: " + version.getNumber() + " to root: " + getRoot() + "" + getRoot().hashCode());
-        thingymabob.putIfAbsent(version, getRoot());
+//        System.out.println("Adding " + e + " in version: " + version.getNumber() + " to root: " + getRoot() + "" + getRoot().hashCode());
+//        thingymabob.putIfAbsent(version, getRoot());
 
         currentNode = null;
         currentRoot = null;

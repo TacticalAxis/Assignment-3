@@ -85,9 +85,16 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        char[] toRun = {8, 5, 12, 12, 15, 11, 5, 1, 14, 14 ,1, 8, 15, 23, 1, 18, 5, 25, 15, 21};
+
+//        for(int i = 0; i < toRun.length; i++) {
+//            System.out.print((char) (toRun[i] + 64));
+//        }
+
+        System.out.println();
 
         // run binary search tree
-//        runBST();
+//        runBST();BaseNode<E>
 
         // run red black tree
 //        runRBT();
