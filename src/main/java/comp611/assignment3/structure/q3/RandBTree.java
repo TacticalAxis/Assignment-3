@@ -32,6 +32,7 @@ public class RandBTree<E extends Comparable<E>> extends BinarySearchTree<E> {
         return null;
     }
 
+    // fix this
     public Node<E> getParent(Node<E> node) {
         // start at the root
         Node<E> current = this.getRoot();
