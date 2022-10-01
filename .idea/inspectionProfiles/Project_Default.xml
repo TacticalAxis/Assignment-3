@@ -5,6 +5,7 @@
       <option name="myAllowedSuppressions">
         <list>
           <option value="unused" />
+          <option value="DuplicatedCode" />
         </list>
       </option>
     </inspection_tool>

@@ -1,5 +1,7 @@
 package comp611.assignment3.structure.q1;
 
+import comp611.assignment3.TreeVisualiser;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -222,6 +224,9 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
 
         // final tree
         System.out.println("Modified Tree: \n" + tree);
+
+        TreeVisualiser<String> tv = new TreeVisualiser<>();
+        tv.visualiseTree(tree);
     }
 
     public int compareNodesDeep(Node<E> node1, Node<E> node2) {

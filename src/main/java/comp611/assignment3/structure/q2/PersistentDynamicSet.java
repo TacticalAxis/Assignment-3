@@ -9,15 +9,15 @@ import java.util.*;
 @SuppressWarnings({"unused", "DuplicatedCode"})
 public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearchTree<E> {
 
-    private final Map<Version, Node<E>> rootMap;
+    private final Map<Version, Node<E>> thingymabob;
 
     public PersistentDynamicSet() {
-        this.rootMap = new HashMap<>();
-        rootMap.put(new Version(), getRoot());
+        this.thingymabob = new HashMap<>();
+        thingymabob.put(new Version(), getRoot());
     }
 
     public Node<E> getVersion(int version) {
-        return rootMap.get(new Version(version));
+        return thingymabob.get(new Version(version));
     }
 
     @Override
@@ -39,8 +39,8 @@ public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearch
     @Override
     public void setRoot(Node<E> modifiedRoot) {
         // get the last version
-        Version lastVersion = new Version(rootMap.size() - 1);
-        Node<E> lastRoot = rootMap.get(lastVersion);
+        Version lastVersion = new Version(thingymabob.size() - 1);
+        Node<E> lastRoot = thingymabob.get(lastVersion);
 
         // if they are the same, don't add a new version
         if(compareNodesDeep(lastRoot, modifiedRoot) == 0) {
@@ -48,7 +48,7 @@ public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearch
             return;
         }
 
-        rootMap.put(new Version(), modifiedRoot);
+        thingymabob.put(new Version(), modifiedRoot);
 
         super.setRoot(modifiedRoot);
     }
@@ -73,7 +73,7 @@ public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearch
         System.out.println("Contains dog: " + tree.contains("dog"));
         System.out.println("Contains owl: " + tree.contains("owl"));
 
-        for(Map.Entry<Version, Node<String>> entry : tree.rootMap.entrySet()) {
+        for(Map.Entry<Version, Node<String>> entry : tree.thingymabob.entrySet()) {
             if(entry != null && entry.getValue() != null) {
                 System.out.println("Version: " + entry.getKey().getNumber() + " - " + entry.getValue().toLinearString());
             }

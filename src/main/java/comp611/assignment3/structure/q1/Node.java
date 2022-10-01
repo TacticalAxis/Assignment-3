@@ -1,5 +1,8 @@
 package comp611.assignment3.structure.q1;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings({"DuplicatedCode", "unused"})
 public class Node<E extends Comparable<E>> implements Comparable<E> {
 
@@ -87,6 +90,10 @@ public class Node<E extends Comparable<E>> implements Comparable<E> {
         this.color = color;
     }
 
+    public boolean getIsRed() {
+        return this.color == TreeColor.RED;
+    }
+
     // get the height of the node
     public int getSize() {
         int height = 0;
@@ -116,7 +123,7 @@ public class Node<E extends Comparable<E>> implements Comparable<E> {
 
     public String toFormattedString(int gap) {
         StringBuilder sb = new StringBuilder();
-        sb.append(value).append(this.hashCode()).append("\n");
+        sb.append(value).append("\n");
         if(left != null) {
             for(int i = 0; i < gap + 1; i++) {
                 sb.append("\t");
@@ -143,5 +150,37 @@ public class Node<E extends Comparable<E>> implements Comparable<E> {
 
     public Node<E> copy() {
         return new Node<>(this.value, this.left, this.right, this.color);
+    }
+
+    public boolean containsChild(Node<E> child) {
+        return (left != null && left.equals(child)) || (right != null && right.equals(child));
+    }
+
+    public boolean containsChild(E child) {
+        return (left != null && left.value.equals(child)) || (right != null && right.value.equals(child));
+    }
+
+    public List<Node<E>> getChildren() {
+        List<Node<E>> list = new ArrayList<>();
+        if (this.left != null) {
+            list.add(this.left);
+        }
+        if (this.right != null) {
+            list.add(this.right);
+        }
+
+        return list;
+    }
+
+    public List<Node<E>> getGrandchildren() {
+        List<Node<E>> gChildren = new ArrayList<>();
+        if (this.left != null) {
+            gChildren.addAll(this.left.getChildren());
+        }
+        if (this.right != null) {
+            gChildren.addAll(this.right.getChildren());
+        }
+
+        return gChildren;
     }
 }
