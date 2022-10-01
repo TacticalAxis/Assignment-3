@@ -3,7 +3,9 @@ package comp611.assignment3.structure.q1;
 import comp611.assignment3.TreeVisualiser;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @SuppressWarnings("unused")
 public abstract class BinarySearchTree<E extends Comparable<E>>{
@@ -191,6 +193,53 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
         toList(node.right, list);
 
         return list;
+    }
+
+    // create iterator to iterate through the tree
+    public Iterator<Node<E>> iterator() {
+        return new InorderIterator();
+    }
+
+    // inner class to iterate through the tree
+    protected class InorderIterator implements Iterator<Node<E>> {
+        // store the elements in a list
+        private final List<Node<E>> list = new ArrayList<>();
+        private int current = 0; // point to the current element in list
+
+        public InorderIterator() {
+            inorder(); // traverse binary tree and store elements in list
+        }
+
+        // inorder traversal from the root
+        private void inorder() {
+            inorder(root);
+        }
+
+        // inorder traversal from a subtree
+        private void inorder(Node<E> root) {
+            if(root == null) {
+                return;
+            }
+
+            inorder(root.left);
+            list.add(root);
+            inorder(root.right);
+        }
+
+        @Override
+        public boolean hasNext() {
+            return current < list.size();
+        }
+
+        @Override
+        public Node<E> next() {
+            // no such element
+            if(!hasNext()) {
+                throw new NoSuchElementException();
+            }
+
+            return list.get(current++);
+        }
     }
 
     // hook method
