@@ -1,6 +1,6 @@
 package comp611.assignment3.structure.q1;
 
-@SuppressWarnings("DuplicatedCode")
+@SuppressWarnings({"DuplicatedCode", "unused"})
 public class Node<E extends Comparable<E>> implements Comparable<E> {
 
     public enum TreeColor {RED, BLACK}
@@ -134,11 +134,14 @@ public class Node<E extends Comparable<E>> implements Comparable<E> {
 
     @Override
     public String toString() {
-        // return "" + (left != null ? "[" + left + "(" + getDepth() + ")]" : "") + value + (right != null ? "[" + right + "]" : "") + "";
         return value.toString();
     }
 
+    public String toLinearString() {
+        return "" + (left != null ? "[" + left.toLinearString() + "]" : "") + value + (right != null ? "[" + right.toLinearString() + "]" : "") + "";
+    }
+
     public Node<E> copy() {
-        return new Node(this.value, this.left, this.right, this.color);
+        return new Node<>(this.value, this.left, this.right, this.color);
     }
 }

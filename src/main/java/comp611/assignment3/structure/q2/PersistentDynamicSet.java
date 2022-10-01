@@ -6,154 +6,77 @@ import comp611.assignment3.structure.q1.Node;
 
 import java.util.*;
 
-@SuppressWarnings({"unused"})
+@SuppressWarnings({"unused", "DuplicatedCode"})
 public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearchTree<E> {
 
     private final Map<Version, Node<E>> rootMap;
-    private final Stack<Node<E>> nodeStack;
 
     public PersistentDynamicSet() {
-        // call super
-        super();
-
         this.rootMap = new HashMap<>();
         rootMap.put(new Version(), getRoot());
+    }
 
-        this.nodeStack = new Stack<>();
+    public Node<E> getVersion(int version) {
+        return rootMap.get(new Version(version));
     }
 
     @Override
     public boolean add(E e) {
-
-
+        System.out.println("Adding " + e + " to the tree");
         return super.add(e);
     }
 
     @Override
-    public boolean remove(E value) {
-        return super.remove(value);
-    }
-
-    @Override
-    public boolean contains(E value) {
-        return super.contains(value);
-    }
-
-    @Override
-    public void hookAdd(Node<E> node) {
-
-    }
-
-    @Override
-    public void hookRemove() {
-
-    }
-
-    @Override
     public void hookNodeTrigger(Node<E> current) {
+//        System.out.println("Hooking node trigger");
+    }
 
+    @Override
+    public Node<E> getSubtree(Node<E> node) {
+        return node.copy();
+    }
+
+    @Override
+    public void setRoot(Node<E> modifiedRoot) {
+        // get the last version
+        Version lastVersion = new Version(rootMap.size() - 1);
+        Node<E> lastRoot = rootMap.get(lastVersion);
+
+        // if they are the same, don't add a new version
+        if(compareNodesDeep(lastRoot, modifiedRoot) == 0) {
+//            System.out.println("No change detected, not adding a new version");
+            return;
+        }
+
+        rootMap.put(new Version(), modifiedRoot);
+
+        super.setRoot(modifiedRoot);
+    }
+
+    public static void main(String[] args) {  // create the binary search tree
+        System.out.println("Running BST");
+        PersistentDynamicSet<String> tree = new PersistentDynamicSet<>();
+
+        // build the tree
+        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant"};
+//        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "greg", "owl", "pig", "rat", "sheep", "tiger", "wolf", "zebra"};
+
+        for(String s : toAddV1) {
+            System.out.println("Adding " + s + ": " + tree.add(s));
+        }
+
+        // test remove
+        System.out.println("Removing owl: " + tree.remove("owl"));
+        System.out.println("Removing dog: " + tree.remove("dog"));
+
+        // test contains
+        System.out.println("Contains dog: " + tree.contains("dog"));
+        System.out.println("Contains owl: " + tree.contains("owl"));
+
+        for(Map.Entry<Version, Node<String>> entry : tree.rootMap.entrySet()) {
+            if(entry != null && entry.getValue() != null) {
+                System.out.println("Version: " + entry.getKey().getNumber() + " - " + entry.getValue().toLinearString());
+            }
+        }
     }
 }
-//
-//}<E extends Comparable<E>> extends BinarySearchTree<E> {
-//
-//    private final Map<Version, Node> thingymabob;
-//    private Node currentRoot;
-//    private Node currentNode;
-//
-//    public PersistentDynamicSet() {
-//        this.thingymabob = new HashMap<>();
-//        this.currentNode = null;
-//        this.currentRoot = null;
-//    }
-//
-//    @Override
-//    public void hookNodeTrigger(Node node) {
-////        if(node.value != currentRoot.value) {
-////            if(currentNode != null) {
-////                // if currentNode.left is node
-////                // then set currentNode.left to new Node(node);
-////                // then set currentNode to currentNode.left
-////                if (currentNode.left == node) {
-////                    currentNode.left = new Node(node);
-////                    currentNode = currentNode.left;
-////                }
-////
-////                // if currentNode.right is node
-////                // then set currentNode.right to new Node(node);
-////                // then set currentNode to currentNode.right
-////                if (currentNode.right == node) {
-////                    currentNode.right = new Node(node);
-////                    currentNode = currentNode.right;
-////                }
-////            }
-////        }
-//        System.out.println("adding hook: " + node.value);
-////        if (currentRoot == null) {
-////            System.out.println("was null");
-////            currentRoot = new Node(node);
-////            currentNode = currentRoot;
-////            return;
-////        }
-////
-////        if (node == currentNode.right) {
-////            currentNode.right = new Node(node);
-////            currentNode = currentNode.right;
-////        } else {
-////            currentNode.left = new Node(node);
-////            currentNode = currentNode.left;
-////        }
-//    }
-//
-//    @Override
-//    public boolean add(E e) {
-//        System.out.println("Adding: " + e);
-//
-////        if(getRoot() != null) {
-////            // duplicate root
-////            this.currentRoot = new Node(getRoot());
-////
-////            // set root to new root
-////            System.out.println("Old Root: " + getRoot() + getRoot().hashCode());
-////            setRoot(this.currentRoot);
-////            System.out.println("New Root: " + getRoot() + getRoot().hashCode());
-////        } else {
-////            this.currentRoot = getRoot();
-////        }
-//
-////        this.currentNode = currentRoot;
-//
-//        // set up a new root node, complete duplicate of other one
-//
-//        // this will call hook multiple times
-//        boolean ret = super.add(e);
-//
-////        Version version = new Version();
-////        System.out.println("Adding " + e + " in version: " + version.getNumber() + " to root: " + getRoot() + "" + getRoot().hashCode());
-////        thingymabob.putIfAbsent(version, getRoot());
-//
-////        currentNode = null;
-////        currentRoot = null;
-//
-////        if(getRoot() == null) {
-////            setRoot(new Node(e));
-////            this.currentRoot = getRoot();
-////        } else {
-////        this.currentRoot = new Node(getRoot());
-////        }
-//
-//        System.out.println("Finished adding: " + e);
-//        return ret;
-//    }
-//
-//    @Override
-//    public String toString() {
-//        return getRoot().toFormattedString(0);
-////        Node selected = thingymabob.get(new Version(thingymabob.size() - 1));
-////        return selected.toFormattedString(0) + "\n";
-//    }
-//
-//    public Map<Version, BinarySearchTree<E>.Node> getAllVersions() {
-//        return thingymabob;
-//    }
-//}

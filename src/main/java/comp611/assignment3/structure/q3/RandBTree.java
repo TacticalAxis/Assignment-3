@@ -18,9 +18,6 @@ public class RandBTree <E extends Comparable<E>> extends BinarySearchTree<E>{
 
         // after add: check if its a leaf, if it is, set colour to black
 
-
-
-
         return super.add(e);
     }
 
@@ -30,24 +27,19 @@ public class RandBTree <E extends Comparable<E>> extends BinarySearchTree<E>{
     }
 
     @Override
-    public boolean contains(E value) {
-        return super.contains(value);
-    }
-
-    @Override
     public void hookNodeTrigger(Node<E> node) {
 
     }
 
-    @Override
-    public void hookAdd(Node<E> node) {
-
-    }
-
-    @Override
-    public void hookRemove() {
-
-    }
+//    @Override
+//    public void hookAdd(Node<E> node) {
+//
+//    }
+//
+//    @Override
+//    public void hookRemove() {
+//
+//    }
 
 }
 //<E extends Comparable<E>> extends BinarySearchTree<E> {

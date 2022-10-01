@@ -34,21 +34,21 @@ public class TreeGUI extends JFrame implements MouseListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-
+        System.out.println("mousePressed");
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-
+        System.out.println("mouseReleased");
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
+        System.out.println("mouseEntered");
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        System.out.println("mouseExited");
     }
 }

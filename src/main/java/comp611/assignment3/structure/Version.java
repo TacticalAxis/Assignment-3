@@ -49,4 +49,9 @@ public class Version {
     public int hashCode() {
         return number;
     }
+
+    @Override
+    public String toString() {
+        return "Version{number=" + number + "}";
+    }
 }

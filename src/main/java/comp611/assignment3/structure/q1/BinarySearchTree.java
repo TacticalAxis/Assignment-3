@@ -1,6 +1,10 @@
 package comp611.assignment3.structure.q1;
 
-public abstract class BinarySearchTree<E extends Comparable<E>> {
+import java.util.ArrayList;
+import java.util.List;
+
+@SuppressWarnings("unused")
+public abstract class BinarySearchTree<E extends Comparable<E>>{
 
     // root of the tree
     private Node<E> root;
@@ -11,6 +15,10 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
 
     public void setRoot(Node<E> root) {
         this.root = root;
+    }
+
+    public Node<E> getSubtree(Node<E> node) {
+        return node;
     }
 
     // constructor
@@ -58,148 +66,107 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
         return size;
     }
 
-    public boolean add(E e) {
-        // if the tree is empty
-        if (root == null) {
-            root = new Node(e);
-            return true;
-        }
-
-        // iterate through the tree
-        Node<E> current = root;
-        hookNodeTrigger(current);
-//        System.out.println(e + " reached " + current.value);
-
-        while(true) {
-            // check if the value is less than the current node
-            if(e.compareTo(current.value) < 0) {
-                if(current.left == null) {
-                    // add the value to the left
-                    current.left = new Node<>(e);
-                    break;
-                } else {
-                    // move to the left child
-                    current = current.left;
-                }
-            } else if(e.compareTo(current.value) > 0) {
-                if (current.right == null) {
-                    // add the value to the right
-                    current.right = new Node<>(e);
-                    break;
-                } else {
-                    // move to the right child
-                    current = current.right;
-                }
-            } else {
-                return false;
-            }
-
-            hookNodeTrigger(current);
-//            System.out.println(e + " reached " + current.value);
-        }
-
-        return true;
-    }
-
-    public boolean remove(E value) {
-        // store ref to parent and current node
-        Node<E> parent = null;
+    public Node<E> query(E value) {
         Node<E> current = root;
 
-        hookNodeTrigger(current);
-//        System.out.println(value + " reached " + current.value);
-
-        // iterate through the tree
         while(current != null) {
-            // check if the value is less than the current node
-            if(value.compareTo(current.value) < 0) {
-                parent = current;
+            if(current.value.compareTo(value) == 0) {
+                return current;
+            }
+
+            if(current.value.compareTo(value) > 0) {
                 current = current.left;
-            } else if(value.compareTo(current.value) > 0) {
-                parent = current;
+            } else {
                 current = current.right;
-            } else {
-                break;
-            }
-
-            if(current != null) {
-                hookNodeTrigger(current);
-//                System.out.println(value + " reached " + current.value);
             }
         }
 
-        // if the value is not found
-        if(current == null) {
-            return false;
-        }
-
-        if(current.left == null) {
-            // if the current node has no left child
-            if(parent == null) {
-                root = current.right;
-            } else {
-                // if the value is less than the parent
-                if(value.compareTo(parent.value) < 0) {
-                    parent.left = current.right;
-                } else {
-                    parent.right = current.right;
-                }
-            }
-        } else {
-            // if the current node has a left child
-            Node<E> rightMost = current.left;
-            Node<E> rightMostParent = current;
-
-            hookNodeTrigger(rightMost);
-//            System.out.println(value + " reached " + rightMost.value);
-
-            // iterate through the right most node
-            while(rightMost.right != null) {
-                rightMostParent = rightMost;
-                rightMost = rightMost.right;
-
-                hookNodeTrigger(rightMost);
-//                System.out.println(value + " reached " + rightMost.value);
-            }
-
-            // replace the current node with the right most node
-            current.value = rightMost.value;
-
-            // if the right most node has a left child
-            if(rightMostParent.right == rightMost) {
-                rightMostParent.right = rightMost.left;
-
-                hookNodeTrigger(rightMostParent);
-//                System.out.println(value + " reached " + rightMostParent.value);
-            } else {
-                rightMostParent.left = rightMost.left;
-
-                hookNodeTrigger(rightMostParent);
-//                System.out.println(value + " reached " + rightMostParent.value);
-            }
-
-            hookNodeTrigger(current);
-//            System.out.println(value + " reached " + current.value);
-        }
-
-        return true;
+        return null;
     }
 
     public boolean contains(E value) {
-        Node<E> current = root;
+        return query(value) != null;
+    }
 
-        // iterate through the tree
-        while(current != null) {
-            if(value.compareTo(current.value) < 0) {
-                current = current.left;
-            } else if(value.compareTo(current.value) > 0) {
-                current = current.right;
+    public boolean add(E value) {
+        if(contains(value)) {
+            return false;
+        }
+
+        Node<E> newRoot = add(root, value);
+        setRoot(newRoot);
+        return newRoot != null;
+    }
+
+    private Node<E> add(Node<E> node, E value) {
+        if(node == null) {
+            if(root == null) {
+                root = new Node<>(value);
+                hookNodeTrigger(root);
+                return root;
             } else {
-                return true;
+                Node<E> attachNode = new Node<>(value);
+                hookNodeTrigger(attachNode);
+                return attachNode;
             }
         }
 
-        return false;
+        Node<E> updatedNode = getSubtree(node);
+        hookNodeTrigger(updatedNode);
+        if(node.value.compareTo(value) > 0) {
+            updatedNode.left = add(node.left, value);
+        } else if(node.value.compareTo(value) < 0) {
+            updatedNode.right = add(node.right, value);
+        } else {
+            return updatedNode;
+        }
+
+        return updatedNode;
+    }
+
+    public boolean remove(E value) {
+        if(!contains(value)) {
+            return false;
+        }
+
+        Node<E> newRoot = remove(root, value);
+        setRoot(newRoot);
+        return newRoot != null;
+    }
+
+    private Node<E> remove(Node<E> node, E value) {
+        if(node == null) {
+            return null;
+        }
+
+        Node<E> updatedNode = getSubtree(node);
+        hookNodeTrigger(updatedNode);
+
+        if(node.value.compareTo(value) > 0) {
+            updatedNode.left = remove(node.left, value);
+        } else if(node.value.compareTo(value) < 0) {
+            updatedNode.right = remove(node.right, value);
+        } else {
+            if(node.left == null) {
+                return node.right;
+            } else if(node.right == null) {
+                return node.left;
+            } else {
+                E minNodeVal = findMin(node.right);
+                updatedNode.value = minNodeVal;
+                updatedNode.right = remove(node.right, minNodeVal);
+            }
+        }
+
+        return updatedNode;
+    }
+
+    public E findMin(Node<E> node) {
+        if(node.left == null) {
+            return node.value;
+        }
+
+        return findMin(node.left);
     }
 
     @Override
@@ -207,14 +174,61 @@ public abstract class BinarySearchTree<E extends Comparable<E>> {
         return root.toFormattedString(0) + "\n";
     }
 
+    public String toLinearString() {
+        return "[" + root.toLinearString() + "]";
+    }
+
+    public List<E> toList() {return  toList(root, new ArrayList<>());}
+    public List<E> toList(Node<E> node, List<E> list) {
+        if(node == null) {
+            return list;
+        }
+
+        toList(node.left, list);
+        list.add(node.value);
+        toList(node.right, list);
+
+        return list;
+    }
+
     // hook method
     public abstract void hookNodeTrigger(Node<E> current);
 
-    // add hook
-    public abstract void hookAdd(Node<E> node);
+    public static void main(String[] args) {  // create the binary search tree
+        System.out.println("Running BST");
+        BinarySearchTree<String> tree = new BinarySearchTree<String>() {
+            @Override public void hookNodeTrigger(Node<String> node) {/* not required for bst */}
+        };
 
-    // remove hook
-    public abstract void hookRemove();
+        // build the tree
+        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant"};
+//        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "greg", "owl", "pig", "rat", "sheep", "tiger", "wolf", "zebra"};
 
+        for(String s : toAddV1) {
+            System.out.println("Adding " + s + ": " + tree.add(s));
+            System.out.println(tree.toLinearString());
+        }
 
+        // display tree
+        System.out.println("Original Tree: \n" + tree.toLinearString());
+
+        // test remove
+        System.out.println("Removing owl: " + tree.remove("owl"));
+        System.out.println("Removing dog: " + tree.remove("dog"));
+
+        // test contains
+        System.out.println("Contains dog: " + tree.contains("dog"));
+        System.out.println("Contains owl: " + tree.contains("owl"));
+
+        // final tree
+        System.out.println("Modified Tree: \n" + tree);
+    }
+
+    public int compareNodesDeep(Node<E> node1, Node<E> node2) {
+        if(node1 == null && node2 == null) {return 0;}
+        if(node1 == null || node2 == null) {return -1;}
+        String node1Str = node1.toLinearString().trim();
+        String node2Str = node2.toLinearString().trim();
+        return node1Str.compareTo(node2Str);
+    }
 }
