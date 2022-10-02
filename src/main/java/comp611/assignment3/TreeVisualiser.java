@@ -23,12 +23,12 @@ public class TreeVisualiser<E extends Comparable<E>> {
 //        System.out.println("Original Tree: \n" + tree.toLinearString());
 
         // test remove
-        System.out.println("Removing owl: " + tree.remove("owl"));
-        System.out.println("Removing dog: " + tree.remove("dog"));
+//        System.out.println("Removing owl: " + tree.remove("owl"));
+//        System.out.println("Removing dog: " + tree.remove("dog"));
 
         // test contains
-        System.out.println("Contains dog: " + tree.contains("dog"));
-        System.out.println("Contains owl: " + tree.contains("owl"));
+//        System.out.println("Contains dog: " + tree.contains("dog"));
+//        System.out.println("Contains owl: " + tree.contains("owl"));
 
         // final tree
 //        System.out.println("Modified Tree: \n" + tree);
@@ -57,7 +57,10 @@ public class TreeVisualiser<E extends Comparable<E>> {
         //		eel
         //		fox
 
+        System.out.println("---------------------------\n");
         System.out.println(tree.getRoot().toFormattedString(0));
+        System.out.println("---------------------------\n");
+        System.out.println(tree.getRoot().toPretty(0));
     }
 
     public static void main(String[] args) {

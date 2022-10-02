@@ -172,4 +172,31 @@ public class Node<E extends Comparable<E>> implements Comparable<E> {
     public void recolour() {
         setColor(this.color == TreeColor.RED ? TreeColor.BLACK : TreeColor.RED);
     }
+
+
+    // ⊢
+    // ⎯
+    // ⏐
+
+    public String toPretty(int gap) {
+        boolean isRBTree = color != null;
+        StringBuilder sb = new StringBuilder();
+
+        sb.append(value).append(color != null ? " " + color + "" : "").append("\n");
+        if(right != null) {
+            for(int i = 0; i < gap + 1; i++) {
+                sb.append("⎯⎯⎯");
+            }
+
+            sb.append("R: ").append(right.toPretty(gap + 1));
+        }
+        if(left != null) {
+            for(int i = 0; i < gap + 1; i++) {
+                sb.append("⎯⎯⎯");
+            }
+
+            sb.append("L: ").append(left.toPretty(gap + 1));
+        }
+        return sb.toString();
+    }
 }
