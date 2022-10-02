@@ -1,8 +1,5 @@
 package comp611.assignment3.structure.q1;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SuppressWarnings({"DuplicatedCode", "unused"})
 public class Node<E extends Comparable<E>> implements Comparable<E> {
 
@@ -122,19 +119,39 @@ public class Node<E extends Comparable<E>> implements Comparable<E> {
     }
 
     public String toFormattedString(int gap) {
+        boolean isRBTree = color != null;
+
         StringBuilder sb = new StringBuilder();
-        sb.append(value).append("\n");
-        if(left != null) {
-            for(int i = 0; i < gap + 1; i++) {
-                sb.append("\t");
-            }
-            sb.append(left.toFormattedString(gap + 1));
-        }
+        sb.append(value).append(color != null ? " " + color + "" : "").append("\n");
         if(right != null) {
             for(int i = 0; i < gap + 1; i++) {
                 sb.append("\t");
             }
-            sb.append(right.toFormattedString(gap + 1));
+
+            sb.append("R: ").append(right.toFormattedString(gap + 1));
+        } else {
+            if(isRBTree) {
+                for (int i = 0; i < gap + 1; i++) {
+                    sb.append("\t");
+                }
+
+                sb.append("R: ").append("nil").append("\n");
+            }
+        }
+        if(left != null) {
+            for(int i = 0; i < gap + 1; i++) {
+                sb.append("\t");
+            }
+
+            sb.append("L: ").append(left.toFormattedString(gap + 1));
+        } else {
+            if(isRBTree) {
+                for (int i = 0; i < gap + 1; i++) {
+                    sb.append("\t");
+                }
+
+                sb.append("L: ").append("nil").append("\n");
+            }
         }
         return sb.toString();
     }
@@ -152,35 +169,7 @@ public class Node<E extends Comparable<E>> implements Comparable<E> {
         return new Node<>(this.value, this.left, this.right, this.color);
     }
 
-    public boolean containsChild(Node<E> child) {
-        return (left != null && left.equals(child)) || (right != null && right.equals(child));
-    }
-
-    public boolean containsChild(E child) {
-        return (left != null && left.value.equals(child)) || (right != null && right.value.equals(child));
-    }
-
-    public List<Node<E>> getChildren() {
-        List<Node<E>> list = new ArrayList<>();
-        if (this.left != null) {
-            list.add(this.left);
-        }
-        if (this.right != null) {
-            list.add(this.right);
-        }
-
-        return list;
-    }
-
-    public List<Node<E>> getGrandchildren() {
-        List<Node<E>> gChildren = new ArrayList<>();
-        if (this.left != null) {
-            gChildren.addAll(this.left.getChildren());
-        }
-        if (this.right != null) {
-            gChildren.addAll(this.right.getChildren());
-        }
-
-        return gChildren;
+    public void recolour() {
+        setColor(this.color == TreeColor.RED ? TreeColor.BLACK : TreeColor.RED);
     }
 }

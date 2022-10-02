@@ -11,6 +11,10 @@ public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearch
 
     private final Map<Version, Node<E>> thingymabob;
 
+    protected Map<Version, Node<E>> getRootNodes() {
+        return thingymabob;
+    }
+
     public PersistentDynamicSet() {
         this.thingymabob = new HashMap<>();
         thingymabob.put(new Version(), getRoot());
@@ -20,11 +24,11 @@ public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearch
         return thingymabob.get(new Version(version));
     }
 
-    @Override
-    public boolean add(E e) {
-        System.out.println("Adding " + e + " to the tree");
-        return super.add(e);
-    }
+//    @Override
+//    public boolean add(E e) {
+//        System.out.println("Adding " + e + " to the tree");
+//        return super.add(e);
+//    }
 
     @Override
     public void hookNodeTrigger(Node<E> current) {
@@ -44,13 +48,18 @@ public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearch
 
         // if they are the same, don't add a new version
         if(compareNodesDeep(lastRoot, modifiedRoot) == 0) {
-//            System.out.println("No change detected, not adding a new version");
             return;
         }
 
         thingymabob.put(new Version(), modifiedRoot);
-
         super.setRoot(modifiedRoot);
+    }
+
+    public void nonOverrideSetRoot(Node<E> root) {
+        // replace the node of the latest version with this root
+        thingymabob.put(new Version(thingymabob.size() - 1), root);
+
+        super.setRoot(root);
     }
 
     public static void main(String[] args) {  // create the binary search tree

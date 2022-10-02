@@ -7,6 +7,7 @@
         <list>
           <option value="unused" />
           <option value="DuplicatedCode" />
+          <option value="CommentedOutCode" />
         </list>
       </option>
     </inspection_tool>

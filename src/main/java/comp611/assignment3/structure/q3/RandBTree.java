@@ -7,23 +7,91 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Iterator;
 
+@SuppressWarnings("unused")
 public class RandBTree<E extends Comparable<E>> extends BinarySearchTree<E> {
 
-    private class Ancestor {
-        Node<E> parent;
-        Node<E> grandparent;
+    private Node<E> getParent(Node<E> node) {
+        // start at the root
+        Node<E> current = getRoot();
 
-        public Ancestor(Node<E> parent, Node<E> grandparent) {
-            this.parent = parent;
-            this.grandparent = grandparent;
+        // if the node is the root, return null
+        if (current == node) {
+            return null;
         }
 
-        public Node<E> getParent() {
-            return parent;
+        // while the current node is not null
+        while (current != null) {
+            // if the current node is the parent of the node, return the current node
+            if (current.left == node || current.right == node) {
+                return current;
+            }
+
+            // if the node is less than the current node, go left
+            if (node.compareTo(current.value) < 0) {
+                current = current.left;
+            }
+            // if the node is greater than the current node, go right
+            else {
+                current = current.right;
+            }
         }
 
-        public Node<E> getGrandparent() {
-            return grandparent;
+        // if the node is not found, return null
+        return null;
+    }
+
+    private Node<E> getGrandparent(Node<E> node) {
+        // get the parent of the node
+        Node<E> parent = getParent(node);
+
+        // if the parent is null, return null
+        if (parent == null) {
+            return null;
+        }
+
+        // return the parent of the parent
+        return getParent(parent);
+    }
+
+    private Node<E> getUncle(Node<E> node) {
+        // get the parent of the node
+        Node<E> parent = getParent(node);
+
+        // if the parent is null, return null
+        if (parent == null) {
+            return null;
+        }
+
+        // get the grandparent of the node
+        Node<E> grandparent = getGrandparent(node);
+
+        // if the grandparent is null, return null
+        if (grandparent == null) {
+            return null;
+        }
+
+        // if the parent is the left child of the grandparent, return the right child of the grandparent
+        if (parent == grandparent.left) {
+            return grandparent.right;
+        }
+        // if the parent is the right child of the grandparent, return the left child of the grandparent
+        else {
+            return grandparent.left;
+        }
+    }
+
+    private Node<E> getUncle(Node<E> parent, Node<E> grandparent) {
+        // if the parent is null, return null
+        if (parent == null || grandparent == null) {
+            return null;
+        }
+        // if the parent is the left child of the grandparent, return the right child of the grandparent
+        if (parent == grandparent.left) {
+            return grandparent.right;
+        }
+        // if the parent is the right child of the grandparent, return the left child of the grandparent
+        else {
+            return grandparent.left;
         }
     }
 
@@ -32,198 +100,30 @@ public class RandBTree<E extends Comparable<E>> extends BinarySearchTree<E> {
     // make constructor
     public RandBTree() {
         super();
-
         this.nodeStack = new ArrayDeque<>();
     }
 
-    public Ancestor getAncestors() {
-        // if nodeStack is empty
-        if(this.nodeStack.isEmpty() || this.nodeStack.size() < 2) {
-            return null;
-        }
-
-        // get the grandparent of the current node (by popping 2 nodes)
-        Node<E> current = this.nodeStack.pop();
-        Node<E> parent = this.nodeStack.pop();
-
-        if(this.nodeStack.isEmpty()) {
-            return new Ancestor(parent, null);
-        }
-
-        Node<E> grandparent = this.nodeStack.pop();
-
-        // push the nodes back onto the stack
-        this.nodeStack.push(grandparent);
-        this.nodeStack.push(parent);
-        this.nodeStack.push(current);
-
-        return new Ancestor(parent, grandparent);
-    }
-
-//    public Node<E> getGrandparent(Node<E> node) {
-//        // start at the root
-//        Node<E> current = this.getRoot();
-//
-//        for(Node<E> child : node.getGrandchildren()) {
-//            if(child == node) {
-//                return current;
-//            }
-//        }
-//
-//        for(Node<E> child : current.getChildren()) {
-//            for(Node<E> c : child.getGrandchildren()) {
-//                if(c == node) {
-//                    return current;
-//                } else {
-//                    current = child;
-//                }
-//            }
-//        }
-//
-//        return null;
-//    }
-
-    // fix this
-//    public Node<E> getParent(Node<E> node) {
-//        // start at the root
-//        Node<E> current = this.getRoot();
-//        System.out.println("Root children: " + current.getChildren());
-//
-//        for(Node<E> child : current.getChildren()) {
-//            System.out.println("Searching for value: " + node.value + " in " + current.getChildren());
-//            if(child.containsChild(node)) {
-//                return current;
-//            } else {
-//                current = child;
-//            }
-//        }
-//
-//        return null;
-//    }
-
-//    public Node<E> getParent(Node<E> node, Node<E> current) {
-//        // start at the root
-//        if(current == null) {
-//            current = this.getRoot();
-//        }
-//
-//        for(Node<E> child : current.getChildren()) {
-//            if(child.containsChild(node)) {
-//                return current;
-//            } else {
-//                current = child;
-//            }
-//        }
-//
-//        return null;
-//    }
-
-    // function to go through every node and look for the parent
-//    public Node<E> getParent(Node<E> node) {
-//        // start at the root
-//        Node<E> current = this.getRoot();
-//
-//        // if the root is the parent
-//        if(current.containsChild(node)) {
-//            return current;
-//        }
-//
-//        // if the root is not the parent
-//        for(Node<E> child : current.getChildren()) {
-//            if(child.containsChild(node)) {
-//                return current;
-//            } else {
-//                current = child;
-//            }
-//        }
-//
-//        return null;
-//    }
-//
-//    // function to go through every node and look for the grandparent
-//    public Node<E> getGrandparent(Node<E> node) {
-//        // start at the root
-//        Node<E> current = this.getRoot();
-//
-//        // if the root is the grandparent
-//        if(current.containsChild(node)) {
-//            return current;
-//        }
-//
-//        // if the root is not the grandparent
-//        for(Node<E> child : current.getChildren()) {
-//            if(child.containsChild(node)) {
-//                return current;
-//            } else {
-//                current = child;
-//            }
-//        }
-//
-//        return null;
-//    }
-
-    public void reBalanceInsert(Node<E> node) {
-        if(getRoot() == node) {
-            node.color = Node.TreeColor.BLACK;
-            return;
-        }
-
-        // not the root
-
-        // make it red
-        node.color = Node.TreeColor.RED;
-
-        Ancestor a = getAncestors();
-
-        if(a != null) {
-            Node<E> x = node;
-
-            // set y to parent of x
-//        Node<E> y = getParent(node);
-            Node<E> y = a.getParent();
-
-            // set z to grandparent of x
-//        Node<E> z = getGrandparent(node);
-            Node<E> z = a.getGrandparent();
-
-            // if y (parent) is red
-            if (y.getIsRed()) {
-                // set s to sibling (parent.child that is not x)
-                Node<E> s = null;
-                for (Node<E> child : z.getChildren()) {
-                    if (child != y) {
-                        s = child;
-                    }
-                }
-
-                if (s != null) {
-                    if (!s.getIsRed()) {
-                        rightRotate(x, y, z);
-                    } else {
-                        leftRotate(x, y, z);
-                    }
+    public void reBalanceInsert(Node<E> node, Node<E> parent, Node<E> grandparent, Node<E> uncle) {
+        if(parent != null && grandparent != null) {
+            if(parent.color == Node.TreeColor.RED) {
+                System.out.println("Double red violation at " + node.value + " with parent " + parent.value + " and grandparent " + grandparent.value);
+                if(uncle != null) {
+                    parent.setColor(Node.TreeColor.BLACK);
+                    uncle.setColor(Node.TreeColor.BLACK);
+                    grandparent.setColor(Node.TreeColor.RED);
                 }
             }
+
+            // recolor the grandparent
+            Node<E> newParent = getParent(grandparent);
+            Node<E> newGrandparent = getGrandparent(grandparent);
+            Node<E> newUncle = getUncle(newParent, newGrandparent);
+
+            // if the new parent is not null, call reBalanceInsert with the new node, new parent, new grandparent, and new uncle
+            if(newParent != null) {
+                reBalanceInsert(grandparent, newParent, newGrandparent, newUncle);
+            }
         }
-
-        // if x is black
-        //
-
-
-        // get parent
-
-        // get grandparent
-
-        // get sibling
-
-
-//        if (getRoot() == null) {
-////            super.add(e);
-//            query(e).setColor(Node.TreeColor.BLACK);
-//            return true;
-//        } else {
-//            Node<E> node = new Node<>(e, Node.TreeColor.RED);
-//        }
     }
 
     public void rightRotate(Node<E> a, Node<E> b, Node<E> c) {
@@ -240,188 +140,227 @@ public class RandBTree<E extends Comparable<E>> extends BinarySearchTree<E> {
         a.setColor(Node.TreeColor.RED);
         b.setColor(Node.TreeColor.BLACK);
         c.setColor(Node.TreeColor.RED);
-        reBalanceInsert(c);
+        reBalanceInsert(c, getParent(c), getGrandparent(c), null);
     }
 
-    public boolean isBalanced() {
-        // rule 1: root is black
-        if(getRoot().color != Node.TreeColor.BLACK) {
+    private boolean isTriangle(Node<E> current, Node<E> parent, Node<E> grandparent) {
+        if(current == null || parent == null || grandparent == null) {
             return false;
         }
-
-        // rule 2: no red node has a red child (using the built in iterator)
-        Iterator<Node<E>> iter = iterator();
-        while(iter.hasNext()) {
-            Node<E> node = iter.next();
-            if(node.color == Node.TreeColor.RED) {
-                for(Node<E> child : node.getChildren()) {
-                    if(child.color == Node.TreeColor.RED) {
-                        return false;
-                    }
-                }
-            }
+        if(current == parent.left && parent == grandparent.right) {
+            return true;
         }
 
-        // rule 3: every path from root to leaf has the same number of black nodes
-        // get the number of black nodes in the first path
-        int blackNodes = 0;
-        Node<E> current = getRoot();
-        while(current != null) {
-            if(current.color == Node.TreeColor.BLACK) {
-                blackNodes++;
-            }
-            current = current.left;
-        }
-
-        return true;
-//        for(Node<E> node : iterator()) {
-//            if(node.color == Node.TreeColor.RED) {
-//                for(Node<E> child : node.getChildren()) {
-//                    if(child.color == Node.TreeColor.RED) {
-//                        return false;
-//                    }
-//                }
-//            }
-//        }
-
-
-//        return false;
+        return current == parent.right && parent == grandparent.left;
     }
 
-    public void reBalanceDelete(Node<E> node) {
-        // if the node is red, just delete it
-        if(node.color == Node.TreeColor.RED) {
+    private void resolveTriangle(Node<E> current, Node<E> parent, Node<E> grandparent) {
+        if(current == null || parent == null || grandparent == null) {
             return;
         }
 
-        // if the node is black
-        // if the node is the root, just delete it
-        if(node == getRoot()) {
+        if(current == parent.left && parent == grandparent.right) {
+            current.right = parent;
+            parent.left = null;
+            grandparent.right = current;
+        } else if(current == parent.right && parent == grandparent.left) {
+            current.left = parent;
+            parent.right = null;
+            grandparent.left = current;
+        }
+    }
+
+    private boolean isLine(Node<E> current, Node<E> parent, Node<E> grandparent) {
+        if(current == null || parent == null || grandparent == null) {
+            return false;
+        }
+        if(current == parent.left && parent == grandparent.left) {
+            return true;
+        }
+
+        return current == parent.right && parent == grandparent.right;
+    }
+
+    private void resolveLine(Node<E> current, Node<E> parent, Node<E> grandparent) {
+        if(current == null || parent == null || grandparent == null) {
             return;
         }
 
-        // if the node is not the root
-        // get the parent
-        Node<E> parent = null;//getParent(node);
+        if(current == parent.right && parent == grandparent.right) {
+            System.out.println("first case");
+            grandparent.right = parent.left;
+            parent.left = grandparent;
 
-        // get the sibling
-        Node<E> sibling = null;
-        for(Node<E> child : parent.getChildren()) {
-            if(child != node) {
-                sibling = child;
+            // if grandparent is the root, set the root to parent
+            if(grandparent == getRoot()) {
+                setRoot(parent);
+                grandparent.setColor(Node.TreeColor.RED);
+                return;
             }
-        }
 
-        if(sibling == null) {
-            return;
-        }
+            // get the parent of the grandparent
+            Node<E> grandparentParent = getParent(grandparent);
+            if(grandparentParent == null) {
+                return;
+            }
 
-        // if the sibling is red
-        if(sibling.color == Node.TreeColor.RED) {
-            // make the sibling black
-            sibling.color = Node.TreeColor.BLACK;
-
-            // make the parent red
-            parent.color = Node.TreeColor.RED;
-
-            // rotate the parent
-            if(sibling == parent.left) {
-                rightRotate(parent, sibling, node);
+            // if the grandparent is the left child of the grandparent's parent, set the grandparent's parent's left child to parent
+            if(grandparentParent.left == grandparent) {
+                grandparentParent.left = parent;
             } else {
-                leftRotate(parent, sibling, node);
+                grandparentParent.right = parent;
             }
-        }
 
-        // if the sibling is black
-        if(sibling.color == Node.TreeColor.BLACK) {
-            // if the sibling has a red child
-            if(sibling.left.color == Node.TreeColor.RED) {
-                // make the sibling red
-                sibling.color = Node.TreeColor.RED;
+            System.out.println("WOOOO: " + current.value);
+            current.setColor(Node.TreeColor.RED);
+        } else if(current == parent.left && parent == grandparent.left) {
+            System.out.println("second case");
+            grandparent.left = parent.right;
+            parent.right = grandparent;
 
-                // make the sibling's left child black
-                sibling.left.color = Node.TreeColor.BLACK;
-
-                // rotate the sibling
-                rightRotate(sibling, sibling.left, node);
-            } else if(sibling.right.color == Node.TreeColor.RED) {
-                // make the sibling red
-                sibling.color = Node.TreeColor.RED;
-
-                // make the sibling's right child black
-                sibling.right.color = Node.TreeColor.BLACK;
-
-                // rotate the sibling
-                leftRotate(sibling, sibling.right, node);
+            // if grandparent is the root, set the root to parent
+            if(grandparent == getRoot()) {
+                setRoot(parent);
+                grandparent.setColor(Node.TreeColor.RED);
+                return;
             }
-        }
 
-        // if the sibling is black and has no red children
-        if(sibling.color == Node.TreeColor.BLACK) {
-            // make the sibling red
-            sibling.color = Node.TreeColor.RED;
+            // get the parent of the grandparent
+            Node<E> grandparentParent = getParent(grandparent);
+            if(grandparentParent == null) {
+                return;
+            }
 
-            // make the parent black
-            parent.color = Node.TreeColor.BLACK;
+            // if the grandparent is the left child of the grandparent's parent, set the grandparent's parent's left child to parent
+            if(grandparentParent.left == grandparent) {
+                grandparentParent.left = parent;
+            } else {
+                grandparentParent.right = parent;
+            }
 
-            // re-balance the parent
-            reBalanceDelete(parent);
+            System.out.println("WOOOO: " + current.value);
+            current.setColor(Node.TreeColor.RED);
         }
     }
-
 
     @Override
     public boolean add(E e) {
+        boolean root = getRoot() == null;
         boolean ret = super.add(e);
         Node<E> node = query(e);
-        node.setColor(Node.TreeColor.RED);
-        Ancestor a = getAncestors();
+//        System.out.println("Added " + e + " to the tree. Grandparent is " + getGrandparent(node) + " and parent is " + getParent(node));
+        node.setColor(root ? Node.TreeColor.BLACK : Node.TreeColor.RED);
+//
+        Node<E> parent = getParent(node);
+        Node<E> grandparent = getGrandparent(node);
+        Node<E> uncle = getUncle(parent, grandparent);
 
-        if(a != null) {
-            if (a.getParent() != null) {
-                if(a.getParent().getIsRed() && node.getIsRed()) {
-                    reBalanceInsert(node);
-//                    if(a.getGrandparent() != null) {
-//                        if(a.getGrandparent().getIsRed()) {
-//                            // if the parent and grandparent are red
-//                            // then the grandparent must be black
-//                            a.getGrandparent().setColor(Node.TreeColor.BLACK);
-//                            // the parent must be red
-//                            a.getParent().setColor(Node.TreeColor.RED);
-//                            // the node must be red
-//                            node.setColor(Node.TreeColor.RED);
-//                        }
-//                    }
-                }
+        System.out.println();
+        System.out.println("Is triangle? " + isTriangle(node, parent, grandparent));
+        System.out.println("Is line? " + isLine(node, parent, grandparent));
+
+        // if is triangle, make node take the place of parent and parent be the opposite child of node
+        if(isTriangle(node, parent, grandparent)) {
+            System.out.println("Resolving triangle");
+            resolveTriangle(node, parent, grandparent);
+
+            if(isLine(parent, node, grandparent)) {
+                System.out.println("Resolving line1");
+                resolveLine(parent, node, grandparent);
             }
         }
 
-//        if(a != null) {
-//            if (a.getParent() != null) {
-//                if(a.getParent().getIsRed() && a.getGrandparent() != null) {
-//                    if(a.getGrandparent().getIsRed()) {
-//                        if(a.getGrandparent().getLeft() != null) {
-//                            if(a.getGrandparent().getLeft().getIsRed()) {
-//                                a.getGrandparent().getLeft().setColor(Node.TreeColor.BLACK);
-//                            }
-//                        }
-//                        if(a.getGrandparent().getRight() != null) {
-//                            if(a.getGrandparent().getRight().getIsRed()) {
-//                                a.getGrandparent().getRight().setColor(Node.TreeColor.BLACK);
-//                            }
-//                        }
-//                        a.getGrandparent().setColor(Node.TreeColor.RED);
-//                    }
-//                }
+        if(isLine(node, parent, grandparent)) {
+            System.out.println("Resolving line2");
+            resolveLine(node, parent, grandparent);
+        }
+
+//        System.out.println("Is triangle? " + isTriangle(node, parent, grandparent));
+//        System.out.println("Is line? " + isLine(node, parent, grandparent));
+//            if(node == parent.left) {
+////                parent.left = node.right;
+//                node.right = parent;
+//            } else {
+//                parent.right = node.left;
+//                node.left = parent;
 //            }
 //        }
+
+//        if(isTriangle(node, parent, grandparent)) {
+//            if(node == parent.left) {
+//                rightRotate(parent, node, grandparent);
+//            }
+//            else {
+//                leftRotate(parent, node, grandparent);
+//            }
+//        }
+//        else if(isLine(node, parent, grandparent)) {
+//            if(node == parent.left) {
+//                rightRotate(grandparent, parent, node);
+//            }
+//            else {
+//                leftRotate(grandparent, parent, node);
+//            }
+//        }
+
+//        if(isTriangle(node, parent, grandparent)) {
+//            System.out.println("Triangle violation at " + node.value + " with parent " + parent.value + " and grandparent " + grandparent.value);
+//            if(node == parent.left) {
+//                System.out.println("Rotating right");
+//                rightRotate(parent, node, grandparent);
+//            }
+//            else {
+//                System.out.println("Rotating left");
+//                leftRotate(parent, node, grandparent);
+//            }
+//        }
+//        else if(isLine(node, parent, grandparent)) {
+//            System.out.println("Line violation at " + node.value + " with parent " + parent.value + " and grandparent " + grandparent.value);
+//            if(node == parent.left) {
+//                System.out.println("Rotating right");
+//                rightRotate(parent, node, grandparent);
+//            }
+//            else {
+//                System.out.println("Rotating left");
+//                leftRotate(parent, node, grandparent);
+//            }
+//        }
+//        else {
+//            reBalanceInsert(node, parent, grandparent, uncle);
+//        }
+
+//        System.out.println("Added " + e + " to the tree. Grandparent is " + grandparent + " and parent is " + parent + " and uncle is " + uncle);
+
+//        reBalanceInsert(node, parent, grandparent, uncle);
+
+//        boolean isBalanced = isBalanced();
+//
+//        if(!isBalanced) {
+//            System.out.println("Tree is not balanced. Re-balancing...");
+//            reBalanceInsert(node, parent, grandparent, uncle);
+//        }
+
+//        reBalanceInsert(node, parent, grandparent, uncle);
+
+        // get root and set it to black
+        getRoot().setColor(Node.TreeColor.BLACK);
+
+//        System.out.println("Tree is balanced: " + isBalanced());
+
+//        if(parent != null && grandparent != null) {
+//            if(parent.color == Node.TreeColor.RED) {
+//                System.out.println("Double red violation at " + node.value + " with parent " + parent.value + " and grandparent " + grandparent.value);
+//                if(uncle != null) {
+//                    parent.setColor(Node.TreeColor.BLACK);
+//                    uncle.setColor(Node.TreeColor.BLACK);
+//                    grandparent.setColor(Node.TreeColor.RED);
+//                }
+////                reBalanceInsert(node, parent, grandparent);
+//            }
+//        }
+
         return ret;
     }
-
-//    @Override
-//    public boolean remove(E value) {
-//        return super.remove(value);
-//    }
 
     @Override
     public void hookNodeTrigger(Node<E> node) {
@@ -430,13 +369,77 @@ public class RandBTree<E extends Comparable<E>> extends BinarySearchTree<E> {
         }
     }
 
+    public boolean isBalanced() {
+        // step 1: check if the root is black
+        if(getRoot().color != Node.TreeColor.BLACK) {
+            System.out.println("Root is not black");
+            return false;
+        }
+
+        // step 2 & 3: check if there are any double red violations
+        Iterator<Node<E>> iterator = iterator();
+        while(iterator.hasNext()) {
+            Node<E> node = iterator.next();
+            // if the node is red, check if both children are black
+            if(node.color == Node.TreeColor.RED) {
+                if(node.left != null && node.left.color == Node.TreeColor.RED) {
+                    System.out.println("Double red violation at " + node.value + " with left child " + node.left.value);
+                    return false;
+                }
+                if(node.right != null && node.right.color == Node.TreeColor.RED) {
+                    System.out.println("Double red violation at " + node.value + " with right child " + node.right.value);
+                    return false;
+                }
+            }
+
+            Node<E> parent = getParent(node);
+            if(parent != null && parent.color == Node.TreeColor.RED && node.color == Node.TreeColor.RED) {
+                System.out.println("Double red violation at " + node.value + " with parent " + parent.value);
+                return false;
+            }
+        }
+
+        // step 4: check if there are any black height violations
+        int blackHeight = 0;
+        Node<E> node = getRoot();
+        while(node != null) {
+            if(node.color == Node.TreeColor.BLACK) {
+                blackHeight++;
+            }
+            node = node.left;
+        }
+
+        iterator = iterator();
+        while(iterator.hasNext()) {
+            node = iterator.next();
+            if(node.left == null && node.right == null) {
+                int currentBlackHeight = 0;
+                Node<E> current = node;
+                while(current != null) {
+                    if(current.color == Node.TreeColor.BLACK) {
+                        currentBlackHeight++;
+                    }
+                    current = getParent(current);
+                }
+                if(currentBlackHeight != blackHeight) {
+                    System.out.println("Black height violation at " + node.value + " with black height " + currentBlackHeight);
+                    return false;
+                }
+            }
+        }
+
+        // if all checks pass, return true
+        return true;
+    }
+
     public static void main(String[] args) {  // create the binary search tree
         System.out.println("Running BST");
         RandBTree<String> tree = new RandBTree<>();
 
         // build the tree
-//        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant"};
-        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "greg", "owl", "pig", "rat", "sheep", "tiger", "wolf", "zebra"};
+        String[] toAddV1 = {"cow", "fly", "dog", "eel"};//, "fox", "cat", "eel", "ant"};
+//        String[] toAddV1 = {"cow", "fly", "bat", "ant"};
+//        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "greg", "owl", "pig", "rat", "sheep", "tiger", "wolf", "zebra"};
 
         for(String s : toAddV1) {
             System.out.println("Adding " + s + ": " + tree.add(s));

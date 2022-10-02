@@ -53,7 +53,6 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
 
         return size;
     }
-
     private int size(Node<E> node) {
         int size = 1;
 
