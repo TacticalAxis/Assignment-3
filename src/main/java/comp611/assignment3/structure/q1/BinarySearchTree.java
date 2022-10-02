@@ -174,6 +174,9 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
 
     @Override
     public String toString() {
+        if(root == null) {
+            return "[]";
+        }
         return root.toFormattedString(0) + "\n";
     }
 

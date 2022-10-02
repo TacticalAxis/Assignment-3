@@ -111,14 +111,32 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
                 node.right = grandparent;
                 gGrandparent.right = node;
             } else if(grandparent == gGrandparent.left) {
-                grandparent.right = null;
-                node.left = grandparent;
+                grandparent.left = null;
+                node.right = grandparent;
                 gGrandparent.left = node;
             }
 
             grandparent.setColor(Node.TreeColor.RED);
             parent.setColor(Node.TreeColor.RED);
             node.setColor(Node.TreeColor.BLACK);
+        } else {
+            System.out.println("LMAO");
+            System.out.println("node: " + node + " node.left: " + node.left + " node.right: " + node.right);
+            System.out.println("parent: " + parent + " parent.left: " + parent.left + " parent.right: " + parent.right);
+            System.out.println("grandparent: " + grandparent + " grandparent.left: " + grandparent.left + " grandparent.right: " + grandparent.right);
+
+            node.right = grandparent;
+            if(node == grandparent.right) {
+                grandparent.right = null;
+            } else if(node == grandparent.left) {
+                grandparent.left = null;
+            }
+
+            grandparent.setColor(Node.TreeColor.RED);
+            parent.setColor(Node.TreeColor.RED);
+            node.setColor(Node.TreeColor.BLACK);
+
+            nonOverrideSetRoot(node);
         }
     }
     public void rotateRLTriangle(Node<E> node, Node<E> parent, Node<E> grandparent) {
@@ -137,14 +155,27 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
                 node.left = grandparent;
                 gGrandparent.right = node;
             } else if(grandparent == gGrandparent.left) {
-                grandparent.left = null;
-                node.right = grandparent;
-                gGrandparent.right = node;
+                grandparent.right = null;
+                node.left = grandparent;
+                gGrandparent.left = node;
             }
 
             grandparent.setColor(Node.TreeColor.RED);
             parent.setColor(Node.TreeColor.RED);
             node.setColor(Node.TreeColor.BLACK);
+        } else {
+            node.left = grandparent;
+            if(node == grandparent.right) {
+                grandparent.right = null;
+            } else if(node == grandparent.left) {
+                grandparent.left = null;
+            }
+
+            grandparent.setColor(Node.TreeColor.RED);
+            parent.setColor(Node.TreeColor.RED);
+            node.setColor(Node.TreeColor.BLACK);
+
+            nonOverrideSetRoot(node);
         }
     }
 
@@ -217,6 +248,7 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
 
         checkRRConflict(current, parent, false);
 
+        System.out.println();
         return added;
     }
 
@@ -229,7 +261,6 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
         if(current == null || parent == null) {
             return;
         }
-
 
         // if the parent is black, return
         if(!parent.getIsRed()) {
@@ -269,6 +300,14 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
                         nonOverrideSetRoot(parent);
                     }
                 }
+//                else if (current == parent.left && parent == grandparent.right) {
+//                    System.out.println("rotateLRTriangle");
+//                    rotateLRTriangle(current, parent, grandparent);
+//                }
+//                else if (current == parent.right && parent == grandparent.left) {
+//                    System.out.println("rotateRLTriangle");
+//                    rotateRLTriangle(current, parent, grandparent);
+//                }
 
                 parent.recolour();
                 grandparent.recolour();
@@ -286,6 +325,7 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
             // do suitable rotation and recoloring
             Node<E> grandparent = getGrandparent(current);
             if(grandparent == null) {
+                System.out.println("THE THINGY GRANDPARENT IS NULL");
                 return;
             }
 
@@ -294,6 +334,7 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
                 rotateLRTriangle(current, parent, grandparent);
             } else if(current == parent.left && parent == grandparent.right) {
                 System.out.println("our current situation2");
+                System.out.println("RotateRLTriangle on val:" + current + "," + parent + "," + grandparent);
                 rotateRLTriangle(current, parent, grandparent);
             } else if(current == parent.right && parent == grandparent.right) {
                 System.out.println("our current situation3");
@@ -334,8 +375,8 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
         // build the tree
 //        String[] toAddV1 = {"cow", "fly", "dog", "eel"};
 //        Integer[] toAddV1 = {10, 18, 7, 15, 16, 30, 25, 40, 60, 2, 1, 70};
-        String[] toAddV1 = {"cow", "fly", "dog"};//, "bat", "fox", "cat", "eel", "ant"};
-//        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "greg", "owl", "pig", "rat", "sheep", "tiger", "wolf", "zebra"};
+//        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant"};//, "fox", "cat", "eel", "ant"};
+        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel"};//, "bat", "fox", "cat", "eel", "ant", "owl", "pig"};//, "pig", "rat", "sheep", "tiger", "wolf", "zebra"};
 
 //        for(Integer s : toAddV1) {
 //            System.out.println("Adding " + s + ": " + tree.add(s));
@@ -343,6 +384,7 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
 
         for(String s : toAddV1) {
             System.out.println("Adding " + s + ": " + tree.add(s));
+            System.out.println("Tree: \n" + tree);
         }
 
         // test remove
@@ -356,6 +398,7 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
         for(Map.Entry<Version, Node<String>> entry : tree.getRootNodes().entrySet()) {
             if(entry != null && entry.getValue() != null) {
                 System.out.println("Version: " + entry.getKey().getNumber() + " - " + entry.getValue().toLinearString());
+                System.out.println("Tree: " + tree);
             }
         }
 
