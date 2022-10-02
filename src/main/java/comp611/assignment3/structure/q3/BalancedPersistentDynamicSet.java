@@ -121,7 +121,6 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
             node.setColor(Node.TreeColor.BLACK);
         }
     }
-
     public void rotateRLTriangle(Node<E> node, Node<E> parent, Node<E> grandparent) {
         if (node == null || parent == null || grandparent == null) {
             return;
@@ -169,7 +168,6 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
         grandparent.recolour();
         parent.recolour();
     }
-
     public void rotateLLLine(Node<E> node, Node<E> parent, Node<E> grandparent) {
         if (node == null || parent == null || grandparent == null) {
             return;
@@ -220,6 +218,11 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
         checkRRConflict(current, parent, false);
 
         return added;
+    }
+
+    @Override
+    public boolean remove(E value) {
+        return super.remove(value);
     }
 
     private void checkRRConflict(Node<E> current, Node<E> parent, boolean inRecursion) {
@@ -325,15 +328,20 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
 
     public static void main(String[] args) {  // create the binary search tree
         System.out.println("Running BST");
-        BalancedPersistentDynamicSet<Integer> tree = new BalancedPersistentDynamicSet<>();
+        BalancedPersistentDynamicSet<String> tree = new BalancedPersistentDynamicSet<>();
+//        BalancedPersistentDynamicSet<Integer> tree = new BalancedPersistentDynamicSet<>();
 
         // build the tree
 //        String[] toAddV1 = {"cow", "fly", "dog", "eel"};
-        Integer[] toAddV1 = {10, 18, 7, 15, 16, 30, 25, 40, 60, 2, 1, 70};
-//        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant"};
+//        Integer[] toAddV1 = {10, 18, 7, 15, 16, 30, 25, 40, 60, 2, 1, 70};
+        String[] toAddV1 = {"cow", "fly", "dog"};//, "bat", "fox", "cat", "eel", "ant"};
 //        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "greg", "owl", "pig", "rat", "sheep", "tiger", "wolf", "zebra"};
 
-        for(Integer s : toAddV1) {
+//        for(Integer s : toAddV1) {
+//            System.out.println("Adding " + s + ": " + tree.add(s));
+//        }
+
+        for(String s : toAddV1) {
             System.out.println("Adding " + s + ": " + tree.add(s));
         }
 
@@ -345,11 +353,17 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
 //        System.out.println("Contains dog: " + tree.contains("dog"));
 //        System.out.println("Contains owl: " + tree.contains("owl"));
 
-        for(Map.Entry<Version, Node<Integer>> entry : tree.getRootNodes().entrySet()) {
+        for(Map.Entry<Version, Node<String>> entry : tree.getRootNodes().entrySet()) {
             if(entry != null && entry.getValue() != null) {
                 System.out.println("Version: " + entry.getKey().getNumber() + " - " + entry.getValue().toLinearString());
             }
         }
+
+//        for(Map.Entry<Version, Node<Integer>> entry : tree.getRootNodes().entrySet()) {
+//            if(entry != null && entry.getValue() != null) {
+//                System.out.println("Version: " + entry.getKey().getNumber() + " - " + entry.getValue().toLinearString());
+//            }
+//        }
 
         System.out.println("Tree: \n" + tree);
     }
