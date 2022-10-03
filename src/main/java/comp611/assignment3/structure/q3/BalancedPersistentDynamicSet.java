@@ -4,95 +4,62 @@ import comp611.assignment3.structure.Version;
 import comp611.assignment3.structure.q1.Node;
 import comp611.assignment3.structure.q2.PersistentDynamicSet;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Map;
 
-@SuppressWarnings({"unused", "CommentedOutCode"})
+@SuppressWarnings("CommentedOutCode")
 public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends PersistentDynamicSet<E> {
 
-    public Node<E> getParent(Node<E> node) {
-        // start at the root
-        Node<E> current = getRoot();
-
-        // if the node is the root, return null
-        if (current == node) {
-            return null;
-        }
-
-        // while the current node is not null
-        while (current != null) {
-            // if the current node is the parent of the node, return the current node
-            if (current.left == node || current.right == node) {
-                return current;
-            }
-
-            // if the node is less than the current node, go left
-            if (node.compareTo(current.value) < 0) {
-                current = current.left;
-            }
-            // if the node is greater than the current node, go right
-            else {
-                current = current.right;
-            }
-        }
-
-        // if the node is not found, return null
-        return null;
-    }
-    private Node<E> getGrandparent(Node<E> node) {
-        // get the parent of the node
-        Node<E> parent = getParent(node);
-
-        // if the parent is null, return null
-        if (parent == null) {
-            return null;
-        }
-
-        // return the parent of the parent
-        return getParent(parent);
-    }
-    private Node<E> getUncle(Node<E> node) {
-        // get the parent of the node
-        Node<E> parent = getParent(node);
-
-        // if the parent is null, return null
-        if (parent == null) {
-            return null;
-        }
-
-        // get the grandparent of the node
-        Node<E> grandparent = getGrandparent(node);
-
-        // if the grandparent is null, return null
-        if (grandparent == null) {
-            return null;
-        }
-
-        // if the parent is the left child of the grandparent, return the right child of the grandparent
-        if (parent == grandparent.left) {
-            return grandparent.right;
-        }
-        // if the parent is the right child of the grandparent, return the left child of the grandparent
-        else {
-            return grandparent.left;
-        }
-    }
-    private Node<E> getUncle(Node<E> parent, Node<E> grandparent) {
-        // if the parent is null, return null
-        if (parent == null || grandparent == null) {
-            return null;
-        }
-        // if the parent is the left child of the grandparent, return the right child of the grandparent
-        if (parent == grandparent.left) {
-            return grandparent.right;
-        }
-        // if the parent is the right child of the grandparent, return the left child of the grandparent
-        else {
-            return grandparent.left;
-        }
-    }
+    private final Deque<Node<E>> nodeStack;
 
     public BalancedPersistentDynamicSet() {
         super();
+        nodeStack = new ArrayDeque<>();
+    }
+
+    public Node<E> getParent(Node<E> node) {
+        if(!nodeStack.contains(node)) {
+            return null;
+        }
+
+        if(nodeStack.size() == 1) {
+            return null;
+        }
+
+        ArrayList<Node<E>> oldNodes = new ArrayList<>();
+        Node<E> current = null;
+        Node<E> parent = null;
+        while (current != node) {
+            current = nodeStack.pop();
+            oldNodes.add(current);
+            parent = nodeStack.peek();
+        }
+
+        for (int i = oldNodes.size() - 1; i >= 0; i--) {
+            nodeStack.push(oldNodes.get(i));
+        }
+
+        return parent;
+    }
+    private Node<E> getGrandparent(Node<E> node) {
+        Node<E> parent = getParent(node);
+        if(parent == null) {
+            return null;
+        }
+        return getParent(parent);
+    }
+    private Node<E> getUncle(Node<E> node) {
+        Node<E> parent = getParent(node);
+        Node<E> grandparent = getGrandparent(node);
+        if(parent == null || grandparent == null) {
+            return null;
+        }
+        if(parent == grandparent.left) {
+            return grandparent.right;
+        }
+        return grandparent.left;
     }
 
     public void rotateLRTriangle(Node<E> node, Node<E> parent, Node<E> grandparent) {
@@ -185,7 +152,6 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
         }
 
         Node<E> gGrandparent = getParent(grandparent);
-        System.out.println("gGrandparent: " + gGrandparent);
         if(gGrandparent != null) {
             grandparent.right = parent.left;
             parent.left = grandparent;
@@ -205,7 +171,6 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
         }
 
         Node<E> gGrandparent = getParent(grandparent);
-        System.out.println("gGrandparent: " + gGrandparent);
         if(gGrandparent != null) {
             grandparent.left = parent.right;
             parent.right = grandparent;
@@ -222,6 +187,8 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
 
     @Override
     public boolean add(E e) {
+        nodeStack.clear();
+
         boolean root = getRoot() == null;
         boolean added = super.add(e);
 
@@ -246,45 +213,12 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
             return added;
         }
 
-        checkRRConflict(current, parent, false);
+        checkRRConflict(current, parent);
 
-        System.out.println();
         return added;
     }
 
-    @Override
-    public boolean remove(E value) {
-        return super.remove(value);
-    }
-
-    public boolean checkBlackHeight(Node<E> root) {
-        if(root == null) {
-            return true;
-        }
-
-        int leftHeight = 0;
-        int rightHeight = 0;
-
-        Node<E> current = root;
-        while(current != null) {
-            if(current.getColor() == Node.TreeColor.BLACK) {
-                leftHeight++;
-            }
-            current = current.left;
-        }
-
-        current = root;
-        while(current != null) {
-            if(current.getColor() == Node.TreeColor.BLACK) {
-                rightHeight++;
-            }
-            current = current.right;
-        }
-
-        return leftHeight == rightHeight;
-    }
-
-    private void checkRRConflict(Node<E> current, Node<E> parent, boolean inRecursion) {
+    private void checkRRConflict(Node<E> current, Node<E> parent) {
         if(current == null || parent == null) {
             return;
         }
@@ -294,81 +228,24 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
             return;
         }
 
-        if(inRecursion) {
-            Node<E> grandparent = getGrandparent(current);
-
-            if(grandparent != null) {
-                Node<E> gGrandparent = getParent(grandparent);
-
-                if(current == parent.right && parent == grandparent.right) {
-                    grandparent.right = parent.left;
-                    parent.left = grandparent;
-
-                    if(gGrandparent != null) {
-                        if(grandparent == gGrandparent.left) {
-                            gGrandparent.left = parent;
-                        } else if (grandparent == gGrandparent.right) {
-                            gGrandparent.right = parent;
-                        }
-                    } else {
-                        nonOverrideSetRoot(parent);
-                    }
-                } else if (current == parent.left && parent == grandparent.left) {
-                    grandparent.left = parent.right;
-                    parent.right = grandparent;
-
-                    if(gGrandparent != null) {
-                        if(grandparent == gGrandparent.left) {
-                            gGrandparent.left = parent;
-                        } else if (grandparent == gGrandparent.right) {
-                            gGrandparent.right = parent;
-                        }
-                    } else {
-                        nonOverrideSetRoot(parent);
-//                        nonOverrideSetRoot(grandparent);
-                    }
-                }
-//                else if (current == parent.left && parent == grandparent.right) {
-//                    System.out.println("rotateLRTriangle");
-//                    rotateLRTriangle(current, parent, grandparent);
-//                }
-//                else if (current == parent.right && parent == grandparent.left) {
-//                    System.out.println("rotateRLTriangle");
-//                    rotateRLTriangle(current, parent, grandparent);
-//                }
-
-                parent.recolour();
-                grandparent.recolour();
-            }
-
-            return;
-        }
-
-        System.out.println("Checking RR conflict on val:" + current + "," + parent);
+//        System.out.println("Checking RR conflict on val:" + current + "," + parent);
 
         // check uncle
         Node<E> uncle = getUncle(current);
         if(uncle == null) {
-            System.out.println("THE THINGY UNCLE IS NOT NULL");
             // do suitable rotation and recoloring
             Node<E> grandparent = getGrandparent(current);
             if(grandparent == null) {
-                System.out.println("THE THINGY GRANDPARENT IS NULL");
                 return;
             }
 
             if(current == parent.right && parent == grandparent.left) {
-                System.out.println("our current situation");
                 rotateLRTriangle(current, parent, grandparent);
             } else if(current == parent.left && parent == grandparent.right) {
-                System.out.println("our current situation2");
-                System.out.println("RotateRLTriangle on val:" + current + "," + parent + "," + grandparent);
                 rotateRLTriangle(current, parent, grandparent);
             } else if(current == parent.right && parent == grandparent.right) {
-                System.out.println("our current situation3");
                 rotateRRLine(current, parent, grandparent);
             } else if(current == parent.left && parent == grandparent.left) {
-                System.out.println("our current situation4");
                 rotateLLLine(current, parent, grandparent);
             }
         } else {
@@ -382,9 +259,23 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
                         grandparent.setColor(Node.TreeColor.RED);
                     }
 
-                    Node<E> gGrandparent = getParent(grandparent);
-                    System.out.println("Checking conflict with: " + grandparent + "," + gGrandparent);
-                    checkRRConflict(grandparent, getParent(grandparent), true);
+                    checkRRConflict(grandparent, getParent(grandparent));
+                }
+            } else {
+                // if the uncle is black, do suitable rotation and recoloring
+                Node<E> grandparent = getGrandparent(current);
+                if(grandparent == null) {
+                    return;
+                }
+
+                if(current == parent.right && parent == grandparent.left) {
+                    rotateLRTriangle(current, parent, grandparent);
+                } else if(current == parent.left && parent == grandparent.right) {
+                    rotateRLTriangle(current, parent, grandparent);
+                } else if(current == parent.right && parent == grandparent.right) {
+                    rotateRRLine(current, parent, grandparent);
+                } else if(current == parent.left && parent == grandparent.left) {
+                    rotateLLLine(current, parent, grandparent);
                 }
             }
         }
@@ -392,51 +283,33 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
 
     @Override
     public void hookNodeTrigger(Node<E> current) {
-//        System.out.println("Hooking node trigger");
+        nodeStack.push(current);
     }
 
     public static void main(String[] args) {  // create the binary search tree
         System.out.println("Running BST");
         BalancedPersistentDynamicSet<String> tree = new BalancedPersistentDynamicSet<>();
-//        BalancedPersistentDynamicSet<Integer> tree = new BalancedPersistentDynamicSet<>();
 
         // build the tree
-//        String[] toAddV1 = {"cow", "fly", "dog", "eel"};
-//        Integer[] toAddV1 = {10, 18, 7, 15, 16, 30, 25, 40, 60, 2, 1, 70};
-//        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant"};//, "fox", "cat", "eel", "ant"};
-        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "pig", "owl", "rat"};//, "bat", "fox", "cat", "eel", "ant", "owl", "pig"};//, "pig", "rat", "sheep", "tiger", "wolf", "zebra"};
-
-//        for(Integer s : toAddV1) {
-//            System.out.println("Adding " + s + ": " + tree.add(s));
-//        }
+        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "pig", "owl", "rat"};
 
         for(String s : toAddV1) {
             System.out.println("Adding " + s + ": " + tree.add(s));
-            System.out.println("Tree: \n" + tree);
         }
-
-        System.out.println("Size: " + tree.size());
 
         // test remove
 //        System.out.println("Removing owl: " + tree.remove("owl"));
 //        System.out.println("Removing dog: " + tree.remove("dog"));
 //
 //        // test contains
-//        System.out.println("Contains dog: " + tree.contains("dog"));
-//        System.out.println("Contains owl: " + tree.contains("owl"));
+        System.out.println("Contains dog: " + tree.contains("dog"));
+        System.out.println("Contains owl: " + tree.contains("owl"));
 
         for(Map.Entry<Version, Node<String>> entry : tree.getRootNodes().entrySet()) {
             if(entry != null && entry.getValue() != null) {
                 System.out.println("Version: " + entry.getKey().getNumber() + " - " + entry.getValue().toLinearString());
-                System.out.println("Tree: " + tree);
             }
         }
-
-//        for(Map.Entry<Version, Node<Integer>> entry : tree.getRootNodes().entrySet()) {
-//            if(entry != null && entry.getValue() != null) {
-//                System.out.println("Version: " + entry.getKey().getNumber() + " - " + entry.getValue().toLinearString());
-//            }
-//        }
 
         System.out.println("Tree: \n" + tree);
     }
