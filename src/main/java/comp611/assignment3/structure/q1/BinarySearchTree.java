@@ -2,12 +2,15 @@ package comp611.assignment3.structure.q1;
 
 import comp611.assignment3.TreeVisualiser;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @SuppressWarnings("unused")
+
+// https://www.baeldung.com/java-print-binary-tree-diagram I used
 public abstract class BinarySearchTree<E extends Comparable<E>>{
 
     // root of the tree
@@ -247,6 +250,69 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
 
     // hook method
     public abstract void hookNodeTrigger(Node<E> current);
+
+    public void print(PrintStream os) {
+        os.print(traversePreOrder(root));
+    }
+
+    public String traversePreOrder(Node<E> root) {
+
+        if (root == null) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        if (root.color == null) {
+            sb.append("\033[0m");
+        } else if(root.color == Node.TreeColor.RED) {
+            sb.append("\033[31m");
+        } else {
+            sb.append("\033[0m");
+        }
+        sb.append(root.getValue());
+        sb.append("\033[36m");
+
+        String pointerRight = "└──";
+        String pointerLeft = (root.getRight() != null) ? "├──" : "└──";
+
+        traverseNodes(sb, "", pointerLeft, root.getLeft(), root.getRight() != null);
+        traverseNodes(sb, "", pointerRight, root.getRight(), false);
+
+        return sb.toString();
+    }
+
+    public void traverseNodes(StringBuilder sb, String padding, String pointer, Node<E> node, boolean hasRightSibling) {
+        if (node != null) {
+            sb.append("\n");
+            sb.append(padding);
+            sb.append(pointer);
+
+            if (node.color == null) {
+                sb.append("\033[0m");
+            } else if(node.color == Node.TreeColor.RED) {
+                sb.append("\033[31m");
+            } else {
+                sb.append("\033[0m");
+            }
+
+            sb.append(node.getValue());
+            sb.append("\033[36m");
+
+            StringBuilder paddingBuilder = new StringBuilder(padding);
+            if (hasRightSibling) {
+                paddingBuilder.append("│  ");
+            } else {
+                paddingBuilder.append("   ");
+            }
+
+            String paddingForBoth = paddingBuilder.toString();
+            String pointerRight = "└──";
+            String pointerLeft = (node.getRight() != null) ? "├──" : "└──";
+
+            traverseNodes(sb, paddingForBoth, pointerLeft, node.getLeft(), node.getRight() != null);
+            traverseNodes(sb, paddingForBoth, pointerRight, node.getRight(), false);
+        }
+    }
 
     public static void main(String[] args) {  // create the binary search tree
         System.out.println("Running BST");

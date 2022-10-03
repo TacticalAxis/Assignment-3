@@ -190,7 +190,7 @@ public class TestingUnit {
         }
 
         // get the version
-        assertEquals(3, tree.getRootNodes().size());
+        assertEquals(3, tree.size());
     }
 
     @Test
@@ -208,6 +208,6 @@ public class TestingUnit {
         }
 
         // get the version
-        assertEquals(3, tree.getRevisions());
+        assertEquals(3, tree.size());
     }
 }

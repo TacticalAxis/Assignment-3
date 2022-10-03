@@ -2,21 +2,25 @@ package comp611.assignment3;
 
 import comp611.assignment3.structure.q1.BinarySearchTree;
 import comp611.assignment3.structure.q1.Node;
+import comp611.assignment3.structure.q3.BalancedPersistentDynamicSet;
 
 public class TreeVisualiser<E extends Comparable<E>> {
 
+
+
     private BinarySearchTree<String> getTree() {
-        BinarySearchTree<String> tree = new BinarySearchTree<String>() {
-            @Override public void hookNodeTrigger(Node<String> node) {/* not required for bst */}
-        };
+        /*BinarySearchTree<String> tree = new BinarySearchTree<String>() {
+            @Override public void hookNodeTrigger(Node<String> node) {*//* not required for bst *//*}
+        };*/
+
+        BalancedPersistentDynamicSet<String> tree = new BalancedPersistentDynamicSet<>();
 
         // build the tree
         String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant"};
 //        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "greg", "owl", "pig", "rat", "sheep", "tiger", "wolf", "zebra"};
 
         for(String s : toAddV1) {
-            System.out.println("Adding " + s + ": " + tree.add(s));
-            System.out.println(tree.toLinearString());
+            tree.add(s);
         }
 
         // display tree
@@ -41,26 +45,7 @@ public class TreeVisualiser<E extends Comparable<E>> {
 
 
     public void visualiseTree(BinarySearchTree<E> tree) {
-        //            dog
-        //      fly
-        //            greg
-        // cow
-        //            ant
-        //      bat
-        //            cat
-
-        //cow
-        //--bat
-        //	L---ant
-        //	L---cat
-        //	fly
-        //		eel
-        //		fox
-
-        System.out.println("---------------------------\n");
-        System.out.println(tree.getRoot().toFormattedString(0));
-        System.out.println("---------------------------\n");
-        System.out.println(tree.getRoot().toPretty(0));
+        tree.print(System.out);
     }
 
     public static void main(String[] args) {
