@@ -183,16 +183,17 @@ public class Node<E extends Comparable<E>> implements Comparable<E> {
         StringBuilder sb = new StringBuilder();
 
         sb.append(value).append(color != null ? " " + color + "" : "").append("\n");
+
         if(right != null) {
             for(int i = 0; i < gap + 1; i++) {
-                sb.append("⎯⎯⎯");
+                sb.append("\t");
             }
 
             sb.append("R: ").append(right.toPretty(gap + 1));
         }
         if(left != null) {
             for(int i = 0; i < gap + 1; i++) {
-                sb.append("⎯⎯⎯");
+                sb.append("\t");
             }
 
             sb.append("L: ").append(left.toPretty(gap + 1));

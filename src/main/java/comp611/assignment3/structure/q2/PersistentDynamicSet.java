@@ -11,8 +11,12 @@ public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearch
 
     private final Map<Version, Node<E>> thingymabob;
 
-    protected Map<Version, Node<E>> getRootNodes() {
+    public Map<Version, Node<E>> getRootNodes() {
         return thingymabob;
+    }
+
+    public int getRevisions() {
+        return thingymabob.size() - 2;
     }
 
     public PersistentDynamicSet() {

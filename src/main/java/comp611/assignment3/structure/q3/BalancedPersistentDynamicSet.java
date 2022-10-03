@@ -9,7 +9,7 @@ import java.util.Map;
 @SuppressWarnings({"unused", "CommentedOutCode"})
 public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends PersistentDynamicSet<E> {
 
-    private Node<E> getParent(Node<E> node) {
+    public Node<E> getParent(Node<E> node) {
         // start at the root
         Node<E> current = getRoot();
 
