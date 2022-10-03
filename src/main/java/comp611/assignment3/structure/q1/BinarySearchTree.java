@@ -15,6 +15,10 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
 
     // root of the tree
     private Node<E> root;
+    String red = "\u001B[31m";
+    String cyan = "\u001B[36m";
+    String reset = "\u001B[0m";
+
 
     public Node<E> getRoot() {
         return this.root;
@@ -251,8 +255,8 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
     // hook method
     public abstract void hookNodeTrigger(Node<E> current);
 
-    public void print(PrintStream os) {
-        os.print(traversePreOrder(root));
+    public void print(PrintStream ps) {
+        ps.print(traversePreOrder(root));
     }
 
     public String traversePreOrder(Node<E> root) {
@@ -262,17 +266,23 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
         }
 
         StringBuilder sb = new StringBuilder();
+        // check if tree contains any colours aka red and black tree
         if (root.color == null) {
-            sb.append("\033[0m");
+            sb.append(reset);
+            // if root is red
         } else if(root.color == Node.TreeColor.RED) {
-            sb.append("\033[31m");
+            sb.append(red);
+            // if root is black
         } else {
-            sb.append("\033[0m");
+            sb.append(reset);
         }
         sb.append(root.getValue());
-        sb.append("\033[36m");
+        // set branches to cyan
+        sb.append(cyan);
 
+        // add right branch
         String pointerRight = "└──";
+        // add left branch
         String pointerLeft = (root.getRight() != null) ? "├──" : "└──";
 
         traverseNodes(sb, "", pointerLeft, root.getLeft(), root.getRight() != null);
@@ -287,18 +297,23 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
             sb.append(padding);
             sb.append(pointer);
 
+            // check if tree contains any colours aka red and black tree
             if (node.color == null) {
-                sb.append("\033[0m");
+                sb.append(reset);
+                // if root is red
             } else if(node.color == Node.TreeColor.RED) {
-                sb.append("\033[31m");
+                sb.append(red);
+                // if root is black
             } else {
-                sb.append("\033[0m");
+                sb.append(reset);
             }
 
             sb.append(node.getValue());
-            sb.append("\033[36m");
+            // set branches to cyan
+            sb.append(cyan);
 
             StringBuilder paddingBuilder = new StringBuilder(padding);
+            // set padding of branches
             if (hasRightSibling) {
                 paddingBuilder.append("│  ");
             } else {
@@ -306,7 +321,9 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
             }
 
             String paddingForBoth = paddingBuilder.toString();
+            // add right branch
             String pointerRight = "└──";
+            // add left branch
             String pointerLeft = (node.getRight() != null) ? "├──" : "└──";
 
             traverseNodes(sb, paddingForBoth, pointerLeft, node.getLeft(), node.getRight() != null);

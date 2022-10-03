@@ -30,6 +30,7 @@ public class TestingUnit {
 
     @Test
     public void removeAssertBST() {
+        // check that the remove method works
         BinarySearchTree<String> tree = new BinarySearchTree<String>() {
             @Override
             public void hookNodeTrigger(Node<String> current) {/*not required*/}
@@ -48,6 +49,7 @@ public class TestingUnit {
 
     @Test
     public void containsAssertBST() {
+        // check that the contains method works
         BinarySearchTree<String> tree = new BinarySearchTree<String>() {
             @Override
             public void hookNodeTrigger(Node<String> current) {/*not required*/}
@@ -84,6 +86,7 @@ public class TestingUnit {
 
     @Test
     public void removeAssertPDS() {
+        // check that the remove method works
         PersistentDynamicSet<String> tree = new PersistentDynamicSet<String>() {
             @Override
             public void hookNodeTrigger(Node<String> current) {/*not required*/}
@@ -102,6 +105,7 @@ public class TestingUnit {
 
     @Test
     public void containsAssertPDS() {
+        // check that the contains method works
         PersistentDynamicSet<String> tree = new PersistentDynamicSet<String>() {
             @Override
             public void hookNodeTrigger(Node<String> current) {/*not required*/}
@@ -139,6 +143,7 @@ public class TestingUnit {
 
     @Test
     public void removeAssertRBT() {
+        // check that the remove method works
         BalancedPersistentDynamicSet<String> tree = new BalancedPersistentDynamicSet<String>() {
             @Override
             public void hookNodeTrigger(Node<String> current) {/*not required*/}
@@ -157,6 +162,7 @@ public class TestingUnit {
 
     @Test
     public void containsAssertRBT() {
+        // check that the contains method works
         BalancedPersistentDynamicSet<String> tree = new BalancedPersistentDynamicSet<String>() {
             @Override
             public void hookNodeTrigger(Node<String> current) {/*not required*/}
@@ -177,6 +183,7 @@ public class TestingUnit {
 
     @Test
     public void versionCheckerPDS() {
+        // check that the version checker works for PDS
         PersistentDynamicSet<String> tree = new PersistentDynamicSet<String>() {
             @Override
             public void hookNodeTrigger(Node<String> current) {/*not required*/}
@@ -195,6 +202,7 @@ public class TestingUnit {
 
     @Test
     public void versionCheckerRBT() {
+        // check that the version checker works for RBT
         BalancedPersistentDynamicSet<String> tree = new BalancedPersistentDynamicSet<String>() {
             @Override
             public void hookNodeTrigger(Node<String> current) {/*not required*/}
