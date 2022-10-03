@@ -257,6 +257,33 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
         return super.remove(value);
     }
 
+    public boolean checkBlackHeight(Node<E> root) {
+        if(root == null) {
+            return true;
+        }
+
+        int leftHeight = 0;
+        int rightHeight = 0;
+
+        Node<E> current = root;
+        while(current != null) {
+            if(current.getColor() == Node.TreeColor.BLACK) {
+                leftHeight++;
+            }
+            current = current.left;
+        }
+
+        current = root;
+        while(current != null) {
+            if(current.getColor() == Node.TreeColor.BLACK) {
+                rightHeight++;
+            }
+            current = current.right;
+        }
+
+        return leftHeight == rightHeight;
+    }
+
     private void checkRRConflict(Node<E> current, Node<E> parent, boolean inRecursion) {
         if(current == null || parent == null) {
             return;
@@ -298,6 +325,7 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
                         }
                     } else {
                         nonOverrideSetRoot(parent);
+//                        nonOverrideSetRoot(grandparent);
                     }
                 }
 //                else if (current == parent.left && parent == grandparent.right) {
@@ -376,7 +404,7 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
 //        String[] toAddV1 = {"cow", "fly", "dog", "eel"};
 //        Integer[] toAddV1 = {10, 18, 7, 15, 16, 30, 25, 40, 60, 2, 1, 70};
 //        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant"};//, "fox", "cat", "eel", "ant"};
-        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel"};//, "bat", "fox", "cat", "eel", "ant", "owl", "pig"};//, "pig", "rat", "sheep", "tiger", "wolf", "zebra"};
+        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "pig", "owl", "rat"};//, "bat", "fox", "cat", "eel", "ant", "owl", "pig"};//, "pig", "rat", "sheep", "tiger", "wolf", "zebra"};
 
 //        for(Integer s : toAddV1) {
 //            System.out.println("Adding " + s + ": " + tree.add(s));
@@ -386,6 +414,8 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
             System.out.println("Adding " + s + ": " + tree.add(s));
             System.out.println("Tree: \n" + tree);
         }
+
+        System.out.println("Size: " + tree.size());
 
         // test remove
 //        System.out.println("Removing owl: " + tree.remove("owl"));

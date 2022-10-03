@@ -51,8 +51,9 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
             size += size(current.right);
         }
 
-        return size;
+        return size + 1;
     }
+
     private int size(Node<E> node) {
         int size = 1;
 
@@ -264,6 +265,8 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
 
         // display tree
         System.out.println("Original Tree: \n" + tree.toLinearString());
+
+        System.out.println("Size: " + tree.size());
 
         // test remove
         System.out.println("Removing owl: " + tree.remove("owl"));

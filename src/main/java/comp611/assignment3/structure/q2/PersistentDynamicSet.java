@@ -67,7 +67,7 @@ public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearch
     }
 
     public static void main(String[] args) {  // create the binary search tree
-        System.out.println("Running BST");
+        System.out.println("Running PDS");
         PersistentDynamicSet<String> tree = new PersistentDynamicSet<>();
 
         // build the tree
@@ -77,6 +77,8 @@ public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearch
         for(String s : toAddV1) {
             System.out.println("Adding " + s + ": " + tree.add(s));
         }
+
+        System.out.println("Size: " + tree.size());
 
         // test remove
         System.out.println("Removing owl: " + tree.remove("owl"));
