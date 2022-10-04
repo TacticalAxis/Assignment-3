@@ -1,8 +1,7 @@
-package comp611.assignment3.structure.q2;
+package comp611.assignment3.structure.task;
 
-import comp611.assignment3.structure.Version;
-import comp611.assignment3.structure.q1.BinarySearchTree;
-import comp611.assignment3.structure.q1.Node;
+import comp611.assignment3.structure.task.model.Node;
+import comp611.assignment3.structure.task.model.Version;
 
 import java.util.*;
 
@@ -15,6 +14,7 @@ public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearch
         return thingymabob;
     }
 
+    @Override
     public int getRevisions() {
         return thingymabob.size() - 2;
     }
@@ -28,16 +28,8 @@ public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearch
         return thingymabob.get(new Version(version));
     }
 
-//    @Override
-//    public boolean add(E e) {
-//        System.out.println("Adding " + e + " to the tree");
-//        return super.add(e);
-//    }
-
     @Override
-    public void hookNodeTrigger(Node<E> current) {
-//        System.out.println("Hooking node trigger");
-    }
+    public void hookNodeTrigger(Node<E> current) {/* not required */}
 
     @Override
     public Node<E> getSubtree(Node<E> node) {
@@ -72,7 +64,6 @@ public class PersistentDynamicSet <E extends Comparable<E>> extends BinarySearch
 
         // build the tree
         String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant"};
-//        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "greg", "owl", "pig", "rat", "sheep", "tiger", "wolf", "zebra"};
 
         for(String s : toAddV1) {
             System.out.println("Adding " + s + ": " + tree.add(s));

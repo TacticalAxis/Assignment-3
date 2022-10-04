@@ -1,8 +1,7 @@
-package comp611.assignment3.structure.q1;
+package comp611.assignment3.structure.task;
 
-import comp611.assignment3.TreeVisualiser;
+import comp611.assignment3.structure.task.model.Node;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,15 +9,26 @@ import java.util.NoSuchElementException;
 
 @SuppressWarnings("unused")
 
-// https://www.baeldung.com/java-print-binary-tree-diagram I used
+// https://www.baeldung.com/java-print-binary-tree-diagram - I used (Keanna)
+/*
+* Tas, Y. (2019, December 16). How to Print a Binary Tree Diagram
+*           Baeldung. Www.baeldung.com
+*           https://www.baeldung.com/java-print-binary-tree-diagram
+* */
+
 public abstract class BinarySearchTree<E extends Comparable<E>>{
+
+    // default revisions without overriding
+    private static final int DEFAULT_REV = 1;
 
     // root of the tree
     private Node<E> root;
-    String red = "\u001B[31m";
-    String cyan = "\u001B[36m";
-    String reset = "\u001B[0m";
 
+    public int getRevisions() {return DEFAULT_REV;}
+
+    private static final String COLOUR_RED = "\u001B[31m";
+    private static final String COLOUR_CYAN = "\u001B[36m";
+    private static final String COLOUR_RESET = "\u001B[0m";
 
     public Node<E> getRoot() {
         return this.root;
@@ -89,6 +99,27 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
                 current = current.left;
             } else {
                 current = current.right;
+            }
+        }
+
+        return null;
+    }
+
+    public Node<E> triggeredQuery(E value) {
+        Node<E> current = root;
+        hookNodeTrigger(current);
+
+        while(current != null) {
+            if(current.value.compareTo(value) == 0) {
+                return current;
+            }
+
+            if(current.value.compareTo(value) > 0) {
+                current = current.left;
+                hookNodeTrigger(current);
+            } else {
+                current = current.right;
+                hookNodeTrigger(current);
             }
         }
 
@@ -172,6 +203,14 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
         return updatedNode;
     }
 
+    private Node<E> findSuccessor(Node<E> node) {
+        if(node.left == null) {
+            return node;
+        }
+
+        return findSuccessor(node.left);
+    }
+
     public E findMin(Node<E> node) {
         if(node.left == null) {
             return node.value;
@@ -185,7 +224,8 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
         if(root == null) {
             return "[]";
         }
-        return root.toFormattedString(0) + "\n";
+
+        return traversePreOrder(root);
     }
 
     public String toLinearString() {
@@ -255,8 +295,40 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
     // hook method
     public abstract void hookNodeTrigger(Node<E> current);
 
-    public void print(PrintStream ps) {
-        ps.print(traversePreOrder(root));
+    public void addAll(List<E> list) {
+        for(E e : list) {
+            add(e);
+        }
+    }
+
+    public void addAll(E[] array) {
+        for(E e : array) {
+            add(e);
+        }
+    }
+
+    public void containsAll(List<E> list) {
+        for(E e : list) {
+            contains(e);
+        }
+    }
+
+    public void containsAll(E[] array) {
+        for(E e : array) {
+            contains(e);
+        }
+    }
+
+    public void removeAll(List<E> list) {
+        for(E e : list) {
+            remove(e);
+        }
+    }
+
+    public void removeAll(E[] array) {
+        for(E e : array) {
+            remove(e);
+        }
     }
 
     public String traversePreOrder(Node<E> root) {
@@ -268,17 +340,17 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
         StringBuilder sb = new StringBuilder();
         // check if tree contains any colours aka red and black tree
         if (root.color == null) {
-            sb.append(reset);
+            sb.append(COLOUR_RESET);
             // if root is red
         } else if(root.color == Node.TreeColor.RED) {
-            sb.append(red);
+            sb.append(COLOUR_RED);
             // if root is black
         } else {
-            sb.append(reset);
+            sb.append(COLOUR_RESET);
         }
         sb.append(root.getValue());
         // set branches to cyan
-        sb.append(cyan);
+        sb.append(COLOUR_CYAN);
 
         // add right branch
         String pointerRight = "└──";
@@ -287,6 +359,8 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
 
         traverseNodes(sb, "", pointerLeft, root.getLeft(), root.getRight() != null);
         traverseNodes(sb, "", pointerRight, root.getRight(), false);
+
+        sb.append(COLOUR_RESET);
 
         return sb.toString();
     }
@@ -299,18 +373,18 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
 
             // check if tree contains any colours aka red and black tree
             if (node.color == null) {
-                sb.append(reset);
+                sb.append(COLOUR_RESET);
                 // if root is red
             } else if(node.color == Node.TreeColor.RED) {
-                sb.append(red);
+                sb.append(COLOUR_RED);
                 // if root is black
             } else {
-                sb.append(reset);
+                sb.append(COLOUR_RESET);
             }
 
             sb.append(node.getValue());
             // set branches to cyan
-            sb.append(cyan);
+            sb.append(COLOUR_CYAN);
 
             StringBuilder paddingBuilder = new StringBuilder(padding);
             // set padding of branches
@@ -361,9 +435,6 @@ public abstract class BinarySearchTree<E extends Comparable<E>>{
 
         // final tree
         System.out.println("Modified Tree: \n" + tree);
-
-        TreeVisualiser<String> tv = new TreeVisualiser<>();
-        tv.visualiseTree(tree);
     }
 
     public int compareNodesDeep(Node<E> node1, Node<E> node2) {

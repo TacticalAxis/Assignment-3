@@ -1,4 +1,4 @@
-package comp611.assignment3.structure;
+package comp611.assignment3.structure.task.model;
 
 public class Version {
 

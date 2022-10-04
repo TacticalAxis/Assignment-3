@@ -1,14 +1,22 @@
-package comp611.assignment3.structure;
+package comp611.assignment3.structure.task.testing;
 
-import comp611.assignment3.structure.q1.BinarySearchTree;
-import comp611.assignment3.structure.q1.Node;
-import comp611.assignment3.structure.q2.PersistentDynamicSet;
-import comp611.assignment3.structure.q3.BalancedPersistentDynamicSet;
+import comp611.assignment3.structure.task.BalancedPersistentDynamicSet;
+import comp611.assignment3.structure.task.BinarySearchTree;
+import comp611.assignment3.structure.task.PersistentDynamicSet;
+import comp611.assignment3.structure.task.model.Node;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestingUnit {
+public class BinarySearchTreeTest {
+
+    @Test
+    public void testAllTrees() {
+//        testTree(new BinarySearchTree<>());
+//        testTree(new PersistentDynamicSet<>());
+//        testTree(new BalancedPersistentDynamicSet<>());
+    }
 
     @Test
     public void addAssertBDT() {
@@ -44,7 +52,7 @@ public class TestingUnit {
         }
 
         // if item is not in the tree, return false
-        assertEquals(true, tree.remove("cow"));
+        assertTrue(tree.remove("cow"));
     }
 
     @Test
@@ -63,7 +71,7 @@ public class TestingUnit {
         }
 
         // if item is not in the tree, return false
-        assertEquals(true, tree.contains("pig"));
+        assertTrue(tree.contains("pig"));
     }
 
     @Test
@@ -100,7 +108,7 @@ public class TestingUnit {
         }
 
         // if item is not in the tree, return false
-        assertEquals(true, tree.remove("wolf"));
+        assertTrue(tree.remove("wolf"));
     }
 
     @Test
@@ -119,7 +127,7 @@ public class TestingUnit {
         }
 
         // if item is not in the tree, return false
-        assertEquals(true, tree.contains("eel"));
+        assertTrue(tree.contains("eel"));
     }
 
 
@@ -157,7 +165,7 @@ public class TestingUnit {
         }
 
         // if item is not in the tree, return false
-        assertEquals(true, tree.remove("dog"));
+        assertTrue(tree.remove("dog"));
     }
 
     @Test
@@ -178,7 +186,7 @@ public class TestingUnit {
 
 
         // if item is not in the tree, return false
-        assertEquals(true, tree.contains("tiger"));
+        assertTrue(tree.contains("tiger"));
     }
 
     @Test

@@ -1,6 +1,4 @@
-package comp611.assignment3.structure.q1;
-
-import java.io.PrintStream;
+package comp611.assignment3.structure.task.model;
 
 @SuppressWarnings({"DuplicatedCode", "unused"})
 public class Node<E extends Comparable<E>> implements Comparable<E> {
@@ -89,8 +87,28 @@ public class Node<E extends Comparable<E>> implements Comparable<E> {
         this.color = color;
     }
 
-    public boolean getIsRed() {
+    public boolean isRed() {
         return this.color == TreeColor.RED;
+    }
+
+    public boolean isInternal() {
+        return this.left != null || this.right != null;
+    }
+
+    public boolean hasTwoChildren() {
+        return this.left != null && this.right != null;
+    }
+
+    public boolean isLeftChild(Node<E> possibleParent) {
+        return possibleParent != null && possibleParent.getLeft() == this;
+    }
+
+    public boolean isRightChild(Node<E> possibleParent) {
+        return possibleParent != null && possibleParent.getRight() == this;
+    }
+
+    public boolean hasOneChild() {
+        return (this.left != null && this.right == null) || (this.left == null && this.right != null);
     }
 
     // get the height of the node

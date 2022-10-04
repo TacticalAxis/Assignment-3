@@ -1,15 +1,11 @@
-package comp611.assignment3.structure.q3;
+package comp611.assignment3.structure.task;
 
-import comp611.assignment3.structure.Version;
-import comp611.assignment3.structure.q1.Node;
-import comp611.assignment3.structure.q2.PersistentDynamicSet;
+import comp611.assignment3.structure.task.model.Node;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
-import java.util.Map;
 
-@SuppressWarnings("CommentedOutCode")
 public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends PersistentDynamicSet<E> {
 
     private final Deque<Node<E>> nodeStack;
@@ -60,6 +56,40 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
             return grandparent.right;
         }
         return grandparent.left;
+    }
+
+    private Node<E> getParentFromRoot(Node<E> node) {
+        if(node == null) {
+            return null;
+        }
+
+        // start at the root
+        Node<E> current = getRoot();
+
+        // if the node is the root, return null
+        if (current == node) {
+            return null;
+        }
+
+        // while the current node is not null
+        while (current != null) {
+            // if the current node is the parent of the node, return the current node
+            if (current.left == node || current.right == node) {
+                return current;
+            }
+
+            // if the node is less than the current node, go left
+            if (node.compareTo(current.value) < 0) {
+                current = current.left;
+            }
+            // if the node is greater than the current node, go right
+            else {
+                current = current.right;
+            }
+        }
+
+        // if the node is not found, return null
+        return null;
     }
 
     public void rotateLRTriangle(Node<E> node, Node<E> parent, Node<E> grandparent) {
@@ -218,17 +248,114 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
         return added;
     }
 
+    @Override
+    public boolean remove(E value) {
+        nodeStack.clear();
+
+        if(value == null) {
+            return false;
+        }
+
+        Node<E> node = query(value);
+        if(node == null) {
+            return false;
+        }
+
+        // if the node is external and is red, then just remove it
+        if(!node.isInternal() && node.isRed()) {
+            System.out.println("Case 1");
+            return super.remove(value);
+        }
+
+        // if the node is black and has one child that is red
+        if(node.isInternal() && node.hasOneChild() && !node.isRed()) {
+            System.out.println("Case 2");
+            Node<E> child = node.left != null ? node.left : node.right;
+            E valueToSet = child.value;
+            boolean removed = super.remove(value);
+            if(removed) {
+                node.value = valueToSet;
+            }
+            return removed;
+        }
+
+        // if it is red, and has two black children, then do find min on right subtree, set the current node's value to the min value, and remove the min value
+        if(node.isRed() && node.hasTwoChildren()) {
+            System.out.println("Case 3");
+            // given that the children are both black
+            Node<E> minNode = query(findMin(node.right));
+            deleteAndReplace(node);
+
+            if(!minNode.isInternal()) {
+                Node<E> p = getParentFromRoot(minNode);
+                if(p != null) {
+                    p.right = null;
+                }
+            } else {
+                Node<E> p = getParentFromRoot(minNode);
+                if(p != null) {
+                    p.right = minNode.right;
+                }
+            }
+
+            return true;
+        }
+
+        // if the node is black, and has two children
+        // go into the right subtree, find the min value, set the current node's value to the min value, and remove the min value
+        // but if the min value node had a right child, then set the min value node's parent's left child to the min value node's right child
+        if(!node.isRed() && node.hasTwoChildren()) {
+            System.out.println("Case 4");
+            Node<E> minNode = query(findMin(node.right));
+            E valueToSet = minNode.value;
+            boolean removed = super.remove(valueToSet);
+            if(removed) {
+                node.value = valueToSet;
+            }
+
+            // set min node's parent's left child to min node's right child if it exists
+            Node<E> minNodeParent = getParent(minNode);
+            if(minNode.right != null) {
+                if(minNodeParent != null) {
+                    minNodeParent.left = minNode.right;
+                }
+            } else {
+                if(minNodeParent != null) {
+                    minNodeParent.left = null;
+                }
+            }
+
+            return removed;
+        }
+
+        return true;
+    }
+
+    public void deleteAndReplace(Node<E> node) {
+        // step 1: find the in-order successor
+        Node<E> successor = node.right;
+        while(successor.left != null) {
+            successor = successor.left;
+        }
+
+        // step 2: swap the values
+        E temp = node.value;
+        node.value = successor.value;
+        successor.value = temp;
+
+        // step 3: remove the successor
+        remove(successor.value);
+    }
+
     private void checkRRConflict(Node<E> current, Node<E> parent) {
         if(current == null || parent == null) {
             return;
         }
 
         // if the parent is black, return
-        if(!parent.getIsRed()) {
+        if(!parent.isRed()) {
             return;
         }
-
-//        System.out.println("Checking RR conflict on val:" + current + "," + parent);
 
         // check uncle
         Node<E> uncle = getUncle(current);
@@ -239,6 +366,7 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
                 return;
             }
 
+            // depending on the position of the current node, do the rotation
             if(current == parent.right && parent == grandparent.left) {
                 rotateLRTriangle(current, parent, grandparent);
             } else if(current == parent.left && parent == grandparent.right) {
@@ -250,7 +378,7 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
             }
         } else {
             // if the uncle is red, recolor
-            if(uncle.getIsRed()) {
+            if(uncle.isRed()) {
                 parent.setColor(Node.TreeColor.BLACK);
                 uncle.setColor(Node.TreeColor.BLACK);
                 Node<E> grandparent = getGrandparent(current);
@@ -268,6 +396,7 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
                     return;
                 }
 
+                // depending on the position of the current node, do the rotation
                 if(current == parent.right && parent == grandparent.left) {
                     rotateLRTriangle(current, parent, grandparent);
                 } else if(current == parent.left && parent == grandparent.right) {
@@ -283,34 +412,72 @@ public class BalancedPersistentDynamicSet<E extends Comparable<E>> extends Persi
 
     @Override
     public void hookNodeTrigger(Node<E> current) {
-        nodeStack.push(current);
-    }
-
-    public static void main(String[] args) {  // create the binary search tree
-        System.out.println("Running BST");
-        BalancedPersistentDynamicSet<String> tree = new BalancedPersistentDynamicSet<>();
-
-        // build the tree
-        String[] toAddV1 = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "pig", "owl", "rat"};
-
-        for(String s : toAddV1) {
-            System.out.println("Adding " + s + ": " + tree.add(s));
-        }
-
-        // test remove
-//        System.out.println("Removing owl: " + tree.remove("owl"));
-//        System.out.println("Removing dog: " + tree.remove("dog"));
-//
-//        // test contains
-        System.out.println("Contains dog: " + tree.contains("dog"));
-        System.out.println("Contains owl: " + tree.contains("owl"));
-
-        for(Map.Entry<Version, Node<String>> entry : tree.getRootNodes().entrySet()) {
-            if(entry != null && entry.getValue() != null) {
-                System.out.println("Version: " + entry.getKey().getNumber() + " - " + entry.getValue().toLinearString());
+        // print all the values of the stack in the order they were added
+        boolean contains = false;
+        for(Node<E> node : nodeStack) {
+            if(node.value == current.value) {
+                contains = true;
+                break;
             }
         }
 
-        System.out.println("Tree: \n" + tree);
+        // if the stack does not contain the current node, then add it
+        if(!contains) {
+            nodeStack.push(current);
+        }
+    }
+
+    public static void main(String[] args) {
+        // TEST WITH STRINGS
+        System.out.println("Running BST - With String");
+        BalancedPersistentDynamicSet<String> bpdsStr = new BalancedPersistentDynamicSet<>();
+
+        // build the tree
+        String[] testStrValues = {"cow", "fly", "dog", "bat", "fox", "cat", "eel", "ant", "pig", "owl", "rat"};
+
+        for(String s : testStrValues) {
+            System.out.println("Adding " + s + ": " + bpdsStr.add(s));
+        }
+
+        System.out.println(bpdsStr);
+        System.out.println("Size: " + bpdsStr.size());
+        System.out.println("Versions: " + bpdsStr.getRevisions());
+
+        // test contains
+        System.out.println("Contains dog: " + bpdsStr.contains("dog")); // true
+        System.out.println("Contains owl: " + bpdsStr.contains("owl")); // true
+
+        // test remove
+        System.out.println("Removing owl: " + bpdsStr.remove("owl")); // true
+
+        System.out.println(bpdsStr);
+
+        // TEST WITH INTEGERS
+        System.out.println("Running BST - With Integers");
+        BalancedPersistentDynamicSet<Integer> bpdsInt = new BalancedPersistentDynamicSet<>();
+
+        // build the tree
+        Integer[] testIntValues = {1,14,23,11,5,8,15,7,22,17,13,16,18,10,21,12,3,6,2,4,20,9,0,19};
+
+        for(Integer s : testIntValues) {
+            System.out.println("Adding " + s + ": " + bpdsInt.add(s));
+        }
+
+        System.out.println(bpdsInt);
+        System.out.println("Size: " + bpdsInt.size());
+        System.out.println("Versions: " + bpdsInt.getRevisions());
+
+        // test contains
+        System.out.println("Contains 33: " + bpdsInt.contains(33));
+        System.out.println("Contains 22: " + bpdsInt.contains(22));
+
+        // test remove
+        System.out.println("Removing 27: " + bpdsInt.remove(27)); // test case 1
+        System.out.println("Removing 6: " + bpdsInt.remove(6)); // test case 2
+        System.out.println("Removing 18: " + bpdsInt.remove(18)); // test case 3
+        System.out.println("Removing 1: " + bpdsInt.remove(1)); // test case 4
+
+        // test tree printing out
+        System.out.println(bpdsInt);
     }
 }

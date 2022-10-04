@@ -1,4 +1,4 @@
-package comp611.assignment3.structure.display;
+package comp611.assignment3.structure.decommissioned;
 
 import javax.swing.*;
 import java.awt.event.MouseEvent;
@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 
 // class that shows a picture of a tree
 public class TreeGUI extends JFrame implements MouseListener {
+
     private static final long serialVersionUID = 1L;
 
     public TreeGUI() {
@@ -28,8 +29,7 @@ public class TreeGUI extends JFrame implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // open dialog box
-        JOptionPane.showMessageDialog(this, "KEANNA BULLY ME 😀😀 she tol me to get good grades");
+        System.out.println("mouseClick");
     }
 
     @Override
